@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src="./vue.js"></script>
+
+  <script>
+    // 展位的get与set
+    function noop(a, b, c) {}
+    const descripter = {
+      enumerable: true,
+      configurable: true,
+      get: noop,
+      set: noop
+    }
+    // 代理
+    function proxy(vm, data, key) {
+      descripter.get = function () {
+        return vm[data][key]
+      }
+      descripter.set = function (val) {
+        vm[data][key] = val
+      }
+      Object.defineProperty(vm, key, descripter)
+    }
+    function initMethods(vm, methods) {
+      for (key in methods) {
+        vm[key] = methods[key].bind(vm)
+      }
+    }
+    function initData(vm) {
+      const { data, methods } = vm.$options
+      dataTmp = vm._data = typeof data === 'function' ? data.call(vm) : data
+      // proxy(vm, '_data', key)
+      let keys = Object.keys(dataTmp)
+      let len = keys.length
+      while (len--) {
+        let key = keys[len]
+        proxy(vm, '_data', key)
+      }
+      console.log(vm)
+    }
+    function initState(vm) {
+      const { data, methods } = vm.$options
+      initMethods(vm, methods)
+      initData(vm)
+    }
+    function initMixin(Vue) {
+      Vue.prototype._init = function (options) {
+        const vm = this
+        vm.$options = options
+        initState(vm);
+      }
+    }
+    function Vue(options) {
+
+      this._init(options);
+    }
+    initMixin(Vue)
+  </script>
+  <script>
+
+    const vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: '若川'
+        }
+      },
+      methods: {
+        sayName() {
+          return this.name
+        },
+        changeName () {
+          this.name = 1
+          return this.name
+        }
+      },
+    })
+    console.log(vm.sayName())
+    console.log(vm.changeName())
+  </script>
+</body>
+
+</html>
