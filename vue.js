@@ -924,11 +924,33 @@
    * object's property keys into getter/setters that
    * collect dependencies and dispatch updates.
    */
+
+  /**
+   * 
+       var uid = 0;
+   *   var Dep = function Dep() {
+       this.id = uid++;
+       this.subs = [];
+  };
+   */
+  // 收集依赖
   var Observer = function Observer(value) {
     this.value = value;
     this.dep = new Dep();
     this.vmCount = 0;
+    /**
+     *  function def(obj, key, val, enumerable) {
+    Object.defineProperty(obj, key, {
+      value: val,
+      enumerable: !!enumerable,
+      writable: true,
+      configurable: true
+    });
+  }
+     */
+    // 此步骤后value已经改变
     def(value, '__ob__', this);
+
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
@@ -991,6 +1013,7 @@
    * returns the new observer if successfully observed,
    * or the existing observer if the value already has one.
    */
+  // observe(data, true /* asRootData */);
   function observe(value, asRootData) {
     if (!isObject(value) || value instanceof VNode) {
       return
@@ -1005,7 +1028,9 @@
       Object.isExtensible(value) &&
       !value._isVue
     ) {
+      // 创建监听器
       ob = new Observer(value);
+
     }
     if (asRootData && ob) {
       ob.vmCount++;
@@ -1016,6 +1041,7 @@
   /**
    * Define a reactive property on an Object.
    */
+  //   defineReactive$$1(obj, keys[i]);
   function defineReactive$$1(
     obj,
     key,
@@ -1024,7 +1050,7 @@
     shallow
   ) {
     var dep = new Dep();
-
+    // 创建getter与setter
     var property = Object.getOwnPropertyDescriptor(obj, key);
     if (property && property.configurable === false) {
       return
@@ -1055,6 +1081,7 @@
         return value
       },
       set: function reactiveSetter(newVal) {
+        debugger
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -4646,6 +4673,7 @@
       return this[sourceKey][key]
     };
     sharedPropertyDefinition.set = function proxySetter(val) {
+      debugger
       this[sourceKey][key] = val;
     };
     Object.defineProperty(target, key, sharedPropertyDefinition);
@@ -4719,7 +4747,7 @@
   }
   // 初始化数据
   function initData(vm) {
-    debugger
+
     var data = vm.$options.data;
     // 在实例上放了一个_data用于保存data
     data = vm._data = typeof data === 'function'
@@ -4986,7 +5014,6 @@
 
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
-      debugger
       var vm = this;
       // a uid
       vm._uid = uid$3++;
