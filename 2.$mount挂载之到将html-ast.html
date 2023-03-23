@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src="./vue.js"></script>
+
+  <script>
+    // 展位的get与set
+    function noop(a, b, c) { }
+    const descripter = {
+      enumerable: true,
+      configurable: true,
+      get: noop,
+      set: noop
+    }
+    // 代理
+    function proxy(vm, data, key) {
+      descripter.get = function () {
+        return vm[data][key]
+      }
+      descripter.set = function (val) {
+        vm[data][key] = val
+      }
+      Object.defineProperty(vm, key, descripter)
+    }
+    function initMethods(vm, methods) {
+      for (key in methods) {
+        vm[key] = methods[key].bind(vm)
+      }
+    }
+    function initData(vm) {
+      const { data, methods } = vm.$options
+      dataTmp = vm._data = typeof data === 'function' ? data.call(vm) : data
+      // proxy(vm, '_data', key)
+      let keys = Object.keys(dataTmp)
+      let len = keys.length
+      while (len--) {
+        let key = keys[len]
+        proxy(vm, '_data', key)
+      }
+      console.log(vm)
+    }
+    function initState(vm) {
+      const { data, methods } = vm.$options
+      initMethods(vm, methods)
+      initData(vm)
+    }
+    function initMixin(Vue) {
+      Vue.prototype._init = function (options) {
+        const vm = this
+        vm.$options = options
+        initState(vm);
+
+        // 挂载
+        if (vm.$options.el) {
+          vm.$mount(vm.$options.el);
+
+          return
+        }
+      }
+    }
+    function Vue(options) {
+      this._init(options);
+    }
+    initMixin(Vue)
+  </script>
+  <script>
+    /**
+     * 1.vm.$mount 挂载el
+     * 2.通过#app获取获取模板
+     * 3.通过complier获取编译模板
+     * 4.
+     * 
+    */
+    Vue.prototype.$mount = function (el, hydrating) {
+      el = query(el)
+      let options = this.$options
+      // 拿到模板
+      let template = getOuterHTML(el)
+      // 获取ref
+      let ref = compileToFunctions(template, {
+        outputSourceRange: "development" !== 'production',
+        shouldDecodeNewlines: undefined,
+        shouldDecodeNewlinesForHref: true,
+        delimiters: options.delimiters,
+        comments: options.comments
+      }, this);
+
+    }
+
+
+    function getOuterHTML(el) {
+      if (el.outerHTML) {
+        return el.outerHTML
+      } else {
+        var container = document.createElement('div');
+        container.appendChild(el.cloneNode(true));
+        return container.innerHTML
+      }
+    }
+    // 获取eldom
+    function query(el) {
+      if (typeof el === 'string') {
+        var selected = document.querySelector(el);
+        if (!selected) {
+          warn(
+            'Cannot find element: ' + el
+          );
+          return document.createElement('div')
+        }
+        return selected
+      } else {
+        return el
+      }
+    }
+
+
+
+    var cache = Object.create(null);
+    function compileToFunctions(
+      template,
+      options,
+      vm
+    ) {
+
+      options = extend({}, options);
+
+
+
+      // compile
+      var compiled = compile(template, options);
+
+
+    }
+
+
+
+    function extend(to, _from) {
+      for (var key in _from) {
+        to[key] = _from[key];
+      }
+      return to
+    }
+
+
+    function compile(
+      template,
+      options
+    ) {
+
+
+      var compiled = baseCompile(template.trim(), options);
+
+      return compiled
+    }
+
+
+    function baseCompile(
+      template,
+      options
+    ) {
+      var ast = parse(template.trim(), options);
+      // if (options.optimize !== false) {
+      //   optimize(ast, options);
+      // }
+      // var code = generate(ast, options);
+      // return {
+      //   ast: ast,
+      //   render: code.render,
+      //   staticRenderFns: code.staticRenderFns
+      // }
+    }
+
+
+
+
+
+    // html -> AST
+    // function parse(
+    //   template,
+    //   options
+    // ) {
+    //   warn$2 = options.warn || baseWarn;
+
+    //   platformIsPreTag = options.isPreTag || no;
+    //   platformMustUseProp = options.mustUseProp || no;
+    //   platformGetTagNamespace = options.getTagNamespace || no;
+    //   var isReservedTag = options.isReservedTag || no;
+    //   maybeComponent = function (el) {
+    //     return !!(
+    //       el.component ||
+    //       el.attrsMap[':is'] ||
+    //       el.attrsMap['v-bind:is'] ||
+    //       !(el.attrsMap.is ? isReservedTag(el.attrsMap.is) : isReservedTag(el.tag))
+    //     );
+    //   };
+    //   transforms = pluckModuleFunction(options.modules, 'transformNode');
+    //   preTransforms = pluckModuleFunction(options.modules, 'preTransformNode');
+    //   postTransforms = pluckModuleFunction(options.modules, 'postTransformNode');
+
+    //   delimiters = options.delimiters;
+
+    //   var stack = [];
+    //   var preserveWhitespace = options.preserveWhitespace !== false;
+    //   var whitespaceOption = options.whitespace;
+    //   var root;
+    //   var currentParent;
+    //   var inVPre = false;
+    //   var inPre = false;
+    //   var warned = false;
+
+    //   function warnOnce(msg, range) {
+    //     if (!warned) {
+    //       warned = true;
+    //       warn$2(msg, range);
+    //     }
+    //   }
+
+    //   function closeElement(element) {
+    //     trimEndingWhitespace(element);
+    //     if (!inVPre && !element.processed) {
+    //       element = processElement(element, options);
+    //     }
+    //     // tree management
+    //     if (!stack.length && element !== root) {
+    //       // allow root elements with v-if, v-else-if and v-else
+    //       if (root.if && (element.elseif || element.else)) {
+    //         {
+    //           checkRootConstraints(element);
+    //         }
+    //         addIfCondition(root, {
+    //           exp: element.elseif,
+    //           block: element
+    //         });
+    //       } else {
+    //         warnOnce(
+    //           "Component template should contain exactly one root element. " +
+    //           "If you are using v-if on multiple elements, " +
+    //           "use v-else-if to chain them instead.",
+    //           { start: element.start }
+    //         );
+    //       }
+    //     }
+    //     if (currentParent && !element.forbidden) {
+    //       if (element.elseif || element.else) {
+    //         processIfConditions(element, currentParent);
+    //       } else {
+    //         if (element.slotScope) {
+    //           // scoped slot
+    //           // keep it in the children list so that v-else(-if) conditions can
+    //           // find it as the prev node.
+    //           var name = element.slotTarget || '"default"'
+    //             ; (currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
+    //         }
+    //         currentParent.children.push(element);
+    //         element.parent = currentParent;
+    //       }
+    //     }
+
+    //     // final children cleanup
+    //     // filter out scoped slots
+    //     element.children = element.children.filter(function (c) { return !(c).slotScope; });
+    //     // remove trailing whitespace node again
+    //     trimEndingWhitespace(element);
+
+    //     // check pre state
+    //     if (element.pre) {
+    //       inVPre = false;
+    //     }
+    //     if (platformIsPreTag(element.tag)) {
+    //       inPre = false;
+    //     }
+    //     // apply post-transforms
+    //     for (var i = 0; i < postTransforms.length; i++) {
+    //       postTransforms[i](element, options);
+    //     }
+    //   }
+
+    //   function trimEndingWhitespace(el) {
+    //     // remove trailing whitespace node
+    //     if (!inPre) {
+    //       var lastNode;
+    //       while (
+    //         (lastNode = el.children[el.children.length - 1]) &&
+    //         lastNode.type === 3 &&
+    //         lastNode.text === ' '
+    //       ) {
+    //         el.children.pop();
+    //       }
+    //     }
+    //   }
+
+    //   function checkRootConstraints(el) {
+    //     if (el.tag === 'slot' || el.tag === 'template') {
+    //       warnOnce(
+    //         "Cannot use <" + (el.tag) + "> as component root element because it may " +
+    //         'contain multiple nodes.',
+    //         { start: el.start }
+    //       );
+    //     }
+    //     if (el.attrsMap.hasOwnProperty('v-for')) {
+    //       warnOnce(
+    //         'Cannot use v-for on stateful component root element because ' +
+    //         'it renders multiple elements.',
+    //         el.rawAttrsMap['v-for']
+    //       );
+    //     }
+    //   }
+
+    //   parseHTML(template, {
+    //     warn: warn$2,
+    //     expectHTML: options.expectHTML,
+    //     isUnaryTag: options.isUnaryTag,
+    //     canBeLeftOpenTag: options.canBeLeftOpenTag,
+    //     shouldDecodeNewlines: options.shouldDecodeNewlines,
+    //     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
+    //     shouldKeepComment: options.comments,
+    //     outputSourceRange: options.outputSourceRange,
+    //     start: function start(tag, attrs, unary, start$1, end) {
+    //       // check namespace.
+    //       // inherit parent ns if there is one
+    //       var ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag);
+
+    //       // handle IE svg bug
+    //       /* istanbul ignore if */
+    //       if (isIE && ns === 'svg') {
+    //         attrs = guardIESVGBug(attrs);
+    //       }
+
+    //       var element = createASTElement(tag, attrs, currentParent);
+    //       if (ns) {
+    //         element.ns = ns;
+    //       }
+
+    //       {
+    //         if (options.outputSourceRange) {
+    //           element.start = start$1;
+    //           element.end = end;
+    //           element.rawAttrsMap = element.attrsList.reduce(function (cumulated, attr) {
+    //             cumulated[attr.name] = attr;
+    //             return cumulated
+    //           }, {});
+    //         }
+    //         attrs.forEach(function (attr) {
+    //           if (invalidAttributeRE.test(attr.name)) {
+    //             warn$2(
+    //               "Invalid dynamic argument expression: attribute names cannot contain " +
+    //               "spaces, quotes, <, >, / or =.",
+    //               {
+    //                 start: attr.start + attr.name.indexOf("["),
+    //                 end: attr.start + attr.name.length
+    //               }
+    //             );
+    //           }
+    //         });
+    //       }
+
+    //       if (isForbiddenTag(element) && !isServerRendering()) {
+    //         element.forbidden = true;
+    //         warn$2(
+    //           'Templates should only be responsible for mapping the state to the ' +
+    //           'UI. Avoid placing tags with side-effects in your templates, such as ' +
+    //           "<" + tag + ">" + ', as they will not be parsed.',
+    //           { start: element.start }
+    //         );
+    //       }
+
+    //       // apply pre-transforms
+    //       for (var i = 0; i < preTransforms.length; i++) {
+    //         element = preTransforms[i](element, options) || element;
+    //       }
+
+    //       if (!inVPre) {
+    //         processPre(element);
+    //         if (element.pre) {
+    //           inVPre = true;
+    //         }
+    //       }
+    //       if (platformIsPreTag(element.tag)) {
+    //         inPre = true;
+    //       }
+    //       if (inVPre) {
+    //         processRawAttrs(element);
+    //       } else if (!element.processed) {
+    //         // structural directives
+    //         processFor(element);
+    //         processIf(element);
+    //         processOnce(element);
+    //       }
+
+    //       if (!root) {
+    //         root = element;
+    //         {
+    //           checkRootConstraints(root);
+    //         }
+    //       }
+
+    //       if (!unary) {
+    //         currentParent = element;
+    //         stack.push(element);
+    //       } else {
+    //         closeElement(element);
+    //       }
+    //     },
+
+    //     end: function end(tag, start, end$1) {
+    //       var element = stack[stack.length - 1];
+    //       // pop stack
+    //       stack.length -= 1;
+    //       currentParent = stack[stack.length - 1];
+    //       if (options.outputSourceRange) {
+    //         element.end = end$1;
+    //       }
+    //       closeElement(element);
+    //     },
+
+    //     chars: function chars(text, start, end) {
+    //       if (!currentParent) {
+    //         {
+    //           if (text === template) {
+    //             warnOnce(
+    //               'Component template requires a root element, rather than just text.',
+    //               { start: start }
+    //             );
+    //           } else if ((text = text.trim())) {
+    //             warnOnce(
+    //               ("text \"" + text + "\" outside root element will be ignored."),
+    //               { start: start }
+    //             );
+    //           }
+    //         }
+    //         return
+    //       }
+    //       // IE textarea placeholder bug
+    //       /* istanbul ignore if */
+    //       if (isIE &&
+    //         currentParent.tag === 'textarea' &&
+    //         currentParent.attrsMap.placeholder === text
+    //       ) {
+    //         return
+    //       }
+    //       var children = currentParent.children;
+    //       if (inPre || text.trim()) {
+    //         text = isTextTag(currentParent) ? text : decodeHTMLCached(text);
+    //       } else if (!children.length) {
+    //         // remove the whitespace-only node right after an opening tag
+    //         text = '';
+    //       } else if (whitespaceOption) {
+    //         if (whitespaceOption === 'condense') {
+    //           // in condense mode, remove the whitespace node if it contains
+    //           // line break, otherwise condense to a single space
+    //           text = lineBreakRE.test(text) ? '' : ' ';
+    //         } else {
+    //           text = ' ';
+    //         }
+    //       } else {
+    //         text = preserveWhitespace ? ' ' : '';
+    //       }
+    //       if (text) {
+    //         if (!inPre && whitespaceOption === 'condense') {
+    //           // condense consecutive whitespaces into single space
+    //           text = text.replace(whitespaceRE$1, ' ');
+    //         }
+    //         var res;
+    //         var child;
+    //         if (!inVPre && text !== ' ' && (res = parseText(text, delimiters))) {
+    //           child = {
+    //             type: 2,
+    //             expression: res.expression,
+    //             tokens: res.tokens,
+    //             text: text
+    //           };
+    //         } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
+    //           child = {
+    //             type: 3,
+    //             text: text
+    //           };
+    //         }
+    //         if (child) {
+    //           if (options.outputSourceRange) {
+    //             child.start = start;
+    //             child.end = end;
+    //           }
+    //           children.push(child);
+    //         }
+    //       }
+    //     },
+    //     comment: function comment(text, start, end) {
+    //       // adding anything as a sibling to the root node is forbidden
+    //       // comments should still be allowed, but ignored
+    //       if (currentParent) {
+    //         var child = {
+    //           type: 3,
+    //           text: text,
+    //           isComment: true
+    //         };
+    //         if (options.outputSourceRange) {
+    //           child.start = start;
+    //           child.end = end;
+    //         }
+    //         currentParent.children.push(child);
+    //       }
+    //     }
+    //   });
+    //   return root
+    // }
+  </script>
+  <script>
+
+    const vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: '若川'
+        }
+      },
+      methods: {
+        sayName() {
+          return this.name
+        },
+        changeName() {
+          this.name = 1
+          return this.name
+        }
+      },
+    })
+    console.log(vm.sayName())
+    console.log(vm.changeName())
+  </script>
+</body>
+
+</html>
