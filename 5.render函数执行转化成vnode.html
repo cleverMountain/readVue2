@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let renderStr = ` _c(
+          "div",
+          {id:"test-id",class:"test-calss",style:{"color":" red"," background":" yellow"}},
+          _v("你好," + _s(name)),
+          _c(
+            "span",
+            {class:"text",style:{"color":" red"}},
+            _v(_s(age)),
+          )
+        )`
+    let age = 1
+    let name = 'li'
+    function _c(...argues) {
+      return createElement(...argues)
+    }
+    function _v(text) {
+      return createTextVnode(text)
+    }
+    function _s(value) {
+      return value
+    }
+    function createElement(tageName, attrs, ...children) {
+      return vnode(tageName, attrs, children, undefined)
+    }
+    function createTextVnode(text) {
+      return vnode(undefined, undefined, undefined, text)
+    }
+    function vnode(tageName, props, children, text) {
+      return {
+        tageName,
+        props,
+        children,
+        text
+      }
+    }
+    const render = new Function(`with(this){return${renderStr}}`)
+    console.log(render())
+  </script>
+</body>
+
+</html>
