@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let ast = {
+      attrs: [
+        { name: 'id', value: 'test-id' },
+        { name: 'class', value: 'test-calss' },
+        { name: 'style', value: "color: red; background: yellow" }
+      ],
+      children: [
+        { type: 3, text: '你好,{{name}}' },
+        {
+          attrs: [
+            { name: 'class', value: 'text' },
+            { name: 'style', value: 'color: red' }
+          ],
+          children: [{ type: 3, text: '{{age}}' }],
+          parent: {
+            attrs: [
+              { name: 'id', value: 'test-id' },
+              { name: 'class', value: 'test-calss' }
+            ],
+            children: [
+              { type: 3, text: '你好,{{name}}' },
+              {
+                attrs: [
+                  { name: 'class', value: 'text' },
+                  { name: 'style', value: 'color: red;' }
+                ],
+                children: [{ type: 3, text: '{{age}}' }],
+                parent: null,
+                tagName: "span",
+                type: 1,
+              }
+            ],
+            parent: null,
+            tagName: "div",
+            type: 1
+          },
+
+          tagName: "span",
+          type: 1,
+        }
+      ],
+      parent: null,
+      tagName: "div",
+      type: 1
+    }
+
+    /**
+     * let template = `<div id="test-id" class="test-calss", style="color: red; background: yellow">你好,{{name}}<span class="text" style="color: red">{{age}}</span></div>`
+     * _c() => createElement()   // 元素 
+     * _v() => createTextVnode() // 文本
+     * _s() => {{name}} => _s(name) // 花括号
+    */
+
+    // function render() {
+    //   return `
+    //     _c(
+    //       "div",
+    //       {id: "test-id", class: "test-calss"},
+    //       _v("你好," + _s(name)),
+    //       _c(
+    //         "span",
+    //         {class: "text", style: {"color: red"}},
+    //         _v(_s(age))
+    //       )
+    //     )
+    //   `
+    // }
+    function format(attrs) {
+      let str = ''
+      for (let i = 0; i < attrs.length; i++) {
+        let attr = attrs[i]
+
+        let styleStr = {}
+        if (attr.name === 'style') {
+          attr.value.split(';').forEach(styleArr => {
+            let [key, value] = styleArr.split(':')
+            styleStr[key] = value
+          })
+          str += attr.name + ':' + JSON.stringify(styleStr) + ','
+        } else {
+          str += attr.name + ':' + JSON.stringify(attr.value) + ','
+        }
+
+      }
+      return str.slice(0, -1)
+    }
+
+    function getChildren(children) {
+      let str = ''
+      if (children.length < 1) return
+      for (let i = 0; i < children.length; i++) {
+        let child = children[i]
+        // 文本节点,简单匹配没有匹配多个{{}}情况
+        if (child.type === 3) {
+          let index = child.text.indexOf('{{')
+          console.log(index)
+          if (index !== -1) {
+            if (index === 0) {
+              str += `_s(${child.text.slice(index + 2, -2)}),`
+            } else {
+              str += `_v(${JSON.stringify(child.text.slice(0, index))} + _s(${child.text.slice(index + 2, -2)})),`
+            }
+          } else {
+            str += `_v(${JSON.stringify(child.text)})`
+          }
+        }
+        // 元素节点
+        if (child.type === 1) {
+          str += generate(child)
+        }
+      }
+      return str
+    }
+    function generate(el) {
+      let children = getChildren(el.children)
+      let code = `
+        _c(
+          ${JSON.stringify(el.tagName)},
+          {${el.attrs.length > 0 ? format(el.attrs) : undefined}},
+          ${children ? children : ''}
+        )
+      `
+
+      return code
+    }
+
+    const code = generate(ast)
+    console.log(code)
+    // render函数
+    const render = new Function(`with(this){return${code}}`)
+    console.log(render)
+  </script>
+</body>
+
+</html>
