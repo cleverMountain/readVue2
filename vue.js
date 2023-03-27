@@ -3,7 +3,7 @@
  * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
-(function (global, factory) {
+(function (global, factoryfactory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
       (global = global || self, global.Vue = factory());

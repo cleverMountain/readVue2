@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let ast = {
+      props: {
+        class: "test-calss",
+        id: "test-id"
+      },
+      children: [
+        { props: undefined, children: undefined, tagName: undefined, text: '你好' },
+        {
+          props: {
+            class: "test-calss",
+            style: { color: ' red' }
+          },
+          children: [{ props: undefined, children: undefined, tagName: undefined, text: '1' }],
+          tagName: "span",
+          type: 1,
+        }
+      ],
+      parent: null,
+      tagName: "div",
+    }
+    function setProperties (dom, props) {
+      for (let k in props) {
+        if (k !== 'style') {
+          dom.setAttribute(k, props[k])
+        } else {
+          for (let key in props[k]) {
+            dom.style[key] = props[k][key]
+          }
+        }
+      } 
+    }
+    function createElement(ast) {
+      let tageName = ast.tagName
+      let dom
+      if (typeof tageName === 'string') {
+        dom = document.createElement(tageName)
+        if (ast.props) {
+          setProperties(dom, ast.props)
+        }
+        if (ast.children.length > 0) {
+          ast.children.forEach(child => {
+            dom.appendChild(createElement(child))
+          })
+        }
+      } else {
+        dom = document.createTextNode(ast.text)
+      }
+      return dom
+    }
+    console.log(createElement(ast))
+  </script>
+</body>
+
+</html>
