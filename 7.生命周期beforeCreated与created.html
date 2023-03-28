@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src="./vue.js"></script>
+
+  <script>
+    function invokeWithErrorHandling(
+      handler,
+      context,
+      args,
+      vm,
+      info
+    ) {
+      var res;
+      try {
+        // 调用生命周期的回调函数
+        res = args ? handler.apply(context, args) : handler.call(context);
+        console.log(res)
+        let a = handler()
+        console.log(a)
+    
+        if (res && !res._isVue && isPromise(res) && !res._handled) {
+          res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
+          // issue #9511
+          // avoid catch triggering multiple times when nested calls
+          res._handled = true;
+        }
+      } catch (e) {
+        // handleError(e, vm, info);
+      }
+      return res
+    }
+    function callHook(vm, hook) {
+
+      // #7573 disable dep collection when invoking lifecycle hooks
+
+      var handlers = vm.$options[hook];
+      var info = hook + " hook";
+      if (handlers) {
+        invokeWithErrorHandling(handlers, vm, null, vm, info);
+      }
+      // if (vm._hasHookEvent) {
+      //   vm.$emit('hook:' + hook);
+
+      // }
+
+    }
+    function initMixin(Vue) {
+      Vue.prototype._init = function (options) {
+        const vm = this
+        vm.$options = options
+        // initLifecycle(vm);
+
+        // initEvents(vm);
+        // initRender(vm);
+        // 所以beforeCreate只是有vm这个实例
+        callHook(vm, 'beforeCreate');
+        // initInjections(vm); // resolve injections before data/props
+        // 挂载data等等
+        // initState(vm);
+        // initProvide(vm); // resolve provide after data/props
+        callHook(vm, 'created');
+      }
+    }
+    function Vue(options) {
+      this._init(options);
+    }
+    initMixin(Vue)
+  </script>
+  <script>
+
+    const vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: '若川'
+        }
+      },
+      beforeCreate() {
+
+      },
+      created() {
+        return 2
+      },
+      methods: {
+        sayName() {
+          return this.name
+        },
+        changeName() {
+          this.name = 1
+          return this.name
+        }
+      },
+    })
+    // console.log(vm.sayName())
+    // console.log(vm.changeName())
+  </script>
+</body>
+
+</html>

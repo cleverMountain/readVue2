@@ -3,7 +3,7 @@
  * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
-(function (global, factoryfactory) {
+(function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
       (global = global || self, global.Vue = factory());
@@ -1113,6 +1113,7 @@
    * already exist.
    */
   function set(target, key, val) {
+    
     if (isUndef(target) || isPrimitive(target)
     ) {
       warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
@@ -1138,7 +1139,9 @@
       target[key] = val;
       return val
     }
+  
     defineReactive$$1(ob.value, key, val);
+
     ob.dep.notify();
     return val
   }
@@ -1315,6 +1318,7 @@
     parentVal,
     childVal
   ) {
+    // debugger
     var res = childVal
       ? parentVal
         ? parentVal.concat(childVal)
@@ -1339,6 +1343,7 @@
 
   LIFECYCLE_HOOKS.forEach(function (hook) {
     strats[hook] = mergeHook;
+   
   });
 
   /**
@@ -1905,6 +1910,10 @@
     var res;
     try {
       res = args ? handler.apply(context, args) : handler.call(context);
+      console.log(res)
+      let a = handler()
+      console.log(a)
+      debugger
       if (res && !res._isVue && isPromise(res) && !res._handled) {
         res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
         // issue #9511
@@ -3983,6 +3992,8 @@
   }
 
   function lifecycleMixin(Vue) {
+  
+    
     Vue.prototype._update = function (vnode, hydrating) {
       var vm = this;
       var prevEl = vm.$el;
@@ -4010,6 +4021,7 @@
       if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
         vm.$parent.$el = vm.$el;
       }
+    
       // updated hook is called by the scheduler to ensure that children are
       // updated in a parent's updated hook.
     };
@@ -4262,6 +4274,7 @@
   }
 
   function callHook(vm, hook) {
+
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4273,6 +4286,7 @@
     }
     if (vm._hasHookEvent) {
       vm.$emit('hook:' + hook);
+      debugger
     }
     popTarget();
   }
@@ -5015,6 +5029,7 @@
 
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
+      debugger
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -5038,6 +5053,7 @@
         //                                            处理
         // internal component options needs special treatment. 
         initInternalComponent(vm, options);
+  
       } else {
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
@@ -5073,7 +5089,7 @@
       if (vm.$options.el) {
        let d =  vm.$mount(vm.$options.el);
        console.log(d)
-       debugger
+   
        return
       }
     };
@@ -5397,6 +5413,7 @@
     },
 
     created: function created() {
+      
       this.cache = Object.create(null);
       this.keys = [];
     },
@@ -5502,6 +5519,7 @@
 
     // 2.6 explicit observable API
     Vue.observable = function (obj) {
+
       observe(obj);
       return obj
     };
@@ -12051,7 +12069,7 @@
     let d = mount.call(this, el, hydrating)
  
     console.log(d)
-    debugger
+
     return mount.call(this, el, hydrating)
   };
 
