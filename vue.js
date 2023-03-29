@@ -1070,9 +1070,9 @@
       enumerable: true,
       configurable: true,
       get: function reactiveGetter() {
-  
+
         var value = getter ? getter.call(obj) : val;
-  
+
         if (Dep.target) {
           dep.depend();
           if (childOb) {
@@ -1113,7 +1113,7 @@
    * already exist.
    */
   function set(target, key, val) {
-    
+
     if (isUndef(target) || isPrimitive(target)
     ) {
       warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
@@ -1139,7 +1139,7 @@
       target[key] = val;
       return val
     }
-  
+
     defineReactive$$1(ob.value, key, val);
 
     ob.dep.notify();
@@ -1343,7 +1343,7 @@
 
   LIFECYCLE_HOOKS.forEach(function (hook) {
     strats[hook] = mergeHook;
-   
+
   });
 
   /**
@@ -1913,7 +1913,6 @@
       console.log(res)
       let a = handler()
       console.log(a)
-      debugger
       if (res && !res._isVue && isPromise(res) && !res._handled) {
         res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
         // issue #9511
@@ -3992,9 +3991,10 @@
   }
 
   function lifecycleMixin(Vue) {
-  
-    
+
+
     Vue.prototype._update = function (vnode, hydrating) {
+
       var vm = this;
       var prevEl = vm.$el;
       var prevVnode = vm._vnode;
@@ -4021,7 +4021,7 @@
       if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
         vm.$parent.$el = vm.$el;
       }
-    
+
       // updated hook is called by the scheduler to ensure that children are
       // updated in a parent's updated hook.
     };
@@ -4286,7 +4286,6 @@
     }
     if (vm._hasHookEvent) {
       vm.$emit('hook:' + hook);
-      debugger
     }
     popTarget();
   }
@@ -5029,7 +5028,6 @@
 
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
-      debugger
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -5053,7 +5051,7 @@
         //                                            处理
         // internal component options needs special treatment. 
         initInternalComponent(vm, options);
-  
+
       } else {
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
@@ -5065,6 +5063,7 @@
       {
         initProxy(vm);
       }
+ 
       // expose real self
       vm._self = vm;
       // 初始化生命周期
@@ -5087,10 +5086,10 @@
       }
 
       if (vm.$options.el) {
-       let d =  vm.$mount(vm.$options.el);
-       console.log(d)
-   
-       return
+        let d = vm.$mount(vm.$options.el);
+        console.log(d)
+
+        return
       }
     };
   }
@@ -5413,7 +5412,7 @@
     },
 
     created: function created() {
-      
+
       this.cache = Object.create(null);
       this.keys = [];
     },
@@ -5491,6 +5490,7 @@
   /*  */
 
   function initGlobalAPI(Vue) {
+    debugger
     // config
     var configDef = {};
     configDef.get = function () { return config; };
@@ -6380,6 +6380,7 @@
       index,
       removeOnly
     ) {
+    debugger
       if (oldVnode === vnode) {
         return
       }
@@ -6468,6 +6469,7 @@
 
     // Note: this is a browser-only function so we can assume elms are DOM nodes.
     function hydrate(elm, vnode, insertedVnodeQueue, inVPre) {
+
       var i;
       var tag = vnode.tag;
       var data = vnode.data;
@@ -9157,6 +9159,7 @@
     hydrating
   ) {
     el = el && inBrowser ? query(el) : undefined;
+
     return mountComponent(this, el, hydrating)
   };
 
@@ -9856,7 +9859,7 @@
         if (isIE && ns === 'svg') {
           attrs = guardIESVGBug(attrs);
         }
-
+        // 得到根节点的虚拟dom
         var element = createASTElement(tag, attrs, currentParent);
         if (ns) {
           element.ns = ns;
@@ -11816,9 +11819,16 @@
         return cache[key]
       }
 
-      // compile
+      // compile 首次进入complied函数
       var compiled = compile(template, options);
-
+       /**
+         *  return {
+         *    ast: ast,   ast语法树
+         *    render: code.render, render函数
+         *    staticRenderFns: code.staticRenderFns
+         *  }
+         */
+        console.log(compiled)
       // check compilation errors/tips
       {
         if (compiled.errors && compiled.errors.length) {
@@ -11850,6 +11860,7 @@
       // turn code into functions
       var res = {};
       var fnGenErrors = [];
+      // 把render字符串变成render函数
       res.render = createFunction(compiled.render, fnGenErrors);
       res.staticRenderFns = compiled.staticRenderFns.map(function (code) {
         return createFunction(code, fnGenErrors)
@@ -11934,7 +11945,17 @@
 
         finalOptions.warn = warn;
 
+        // 前面先不管进入baseCompile
         var compiled = baseCompile(template.trim(), finalOptions);
+        /**
+         *  return {
+         *    ast: ast,   ast语法树
+         *    render: code.render, render函数
+         *    staticRenderFns: code.staticRenderFns
+         *  }
+         */
+        console.log(compiled)
+
         {
           detectErrors(compiled.ast, warn);
         }
@@ -11942,7 +11963,6 @@
         compiled.tips = tips;
         return compiled
       }
-
       return {
         compile: compile,
         compileToFunctions: createCompileToFunctionFn(compile)
@@ -11959,6 +11979,7 @@
     template,
     options
   ) {
+    // 得到虚拟dom
     var ast = parse(template.trim(), options);
     if (options.optimize !== false) {
       optimize(ast, options);
@@ -12004,6 +12025,8 @@
     el,
     hydrating
   ) {
+    // 拿到dom节点
+   
     el = el && query(el);
 
     /* istanbul ignore if */
@@ -12017,7 +12040,9 @@
     var options = this.$options;
     // resolve template/el and convert to render function
     if (!options.render) {
+
       var template = options.template;
+      // 模板挂载 如果有template就优先使用tenplate
       if (template) {
         if (typeof template === 'string') {
           if (template.charAt(0) === '#') {
@@ -12039,6 +12064,7 @@
           return this
         }
       } else if (el) {
+        // 其次使用el，得到dom节点
         template = getOuterHTML(el);
       }
       if (template) {
@@ -12054,6 +12080,15 @@
           delimiters: options.delimiters,
           comments: options.comments
         }, this);
+        // ref已经包含render属性
+        /**
+         * {
+         *   render: ƒ anonymous(),
+         *   staticRenderFns: []
+         * }
+         */
+        console.log(ref)
+   
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
         options.render = render;
@@ -12067,7 +12102,6 @@
       }
     }
     let d = mount.call(this, el, hydrating)
- 
     console.log(d)
 
     return mount.call(this, el, hydrating)

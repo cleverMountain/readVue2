@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function initGlobalAPI(Vue) {
+
+      // config
+      var configDef = {};
+      configDef.get = function () { return config; };
+      {
+        configDef.set = function () {
+          warn(
+            'Do not replace the Vue.config object, set individual fields instead.'
+          );
+        };
+      }
+      // 在Vue身上定义了set config与get config
+      Object.defineProperty(Vue, 'config', configDef);
+
+      // exposed util methods.
+      // NOTE: these are not considered part of the public API - avoid relying on
+      // them unless you are aware of the risk.
+      // 添加util
+      Vue.util = {
+        warn: warn,
+        extend: extend,
+        mergeOptions: mergeOptions,
+        defineReactive: defineReactive$$1
+      };
+      // 添加set del
+      Vue.set = set;
+      Vue.delete = del;
+      Vue.nextTick = nextTick;
+
+      // 2.6 explicit observable API
+      // 添加observe
+      Vue.observable = function (obj) {
+
+        observe(obj);
+        return obj
+      };
+
+      Vue.options = Object.create(null);
+      // 添加components  filters directives
+      ASSET_TYPES.forEach(function (type) {
+        Vue.options[type + 's'] = Object.create(null);
+      });
+
+      // this is used to identify the "base" constructor to extend all plain-object
+      // components with in Weex's multi-instance scenarios.
+      Vue.options._base = Vue;
+      // 添加 KeepAlive
+      extend(Vue.options.components, builtInComponents);
+      /*
+      delete
+      : 
+      ƒ del(target, key)
+      nextTick
+      : 
+      ƒ nextTick(cb, ctx)
+      observable
+      : 
+      ƒ (obj)
+      options
+      : 
+      {components: {…}, directives: {…}, filters: {…}, _base: ƒ}
+      set
+      : 
+      ƒ (target, key, val)
+      util
+      : 
+      {warn: ƒ, extend: ƒ, mergeOptions: ƒ, defineReactive: ƒ}
+      config
+      : 
+      （…）
+      length
+      : 
+      1
+      name
+      : 
+      "Vue"
+      prototype
+      : 
+      {_init: ƒ, $set: ƒ, $delete: ƒ, $watch: ƒ, $on: ƒ, …}
+      arguments
+      : 
+      （…）
+      caller
+      : 
+      （…）
+      get config
+      : 
+      ƒ ()
+      set config
+      : 
+      ƒ ()
+      */
+
+      // use -> Vue.use(plugins) 绑定插件时使用
+      initUse(Vue);
+      // 混入 -> Vue.mixin(options) 混入options  mergeOptions(this.options, mixin)
+      initMixin$1(Vue);
+      // 增加optionos -> Vue.extend
+      initExtend(Vue);
+      // 单独使compoent filter directive 
+      initAssetRegisters(Vue);
+    }
+
+    initGlobalAPI(Vue);
+  </script>
+</body>
+
+</html>
