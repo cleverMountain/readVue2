@@ -5042,6 +5042,7 @@
 
       // a flag to avoid this being observed
       vm._isVue = true;
+    
       // merge options
       if (options && options._isComponent) {
         // 优化      内部的    组件     实例  instance
@@ -5067,6 +5068,7 @@
       // expose real self
       vm._self = vm;
       // 初始化生命周期
+      debugger
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
@@ -5490,7 +5492,6 @@
   /*  */
 
   function initGlobalAPI(Vue) {
-    debugger
     // config
     var configDef = {};
     configDef.get = function () { return config; };
@@ -6380,7 +6381,6 @@
       index,
       removeOnly
     ) {
-    debugger
       if (oldVnode === vnode) {
         return
       }
