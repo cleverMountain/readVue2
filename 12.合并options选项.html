@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    vm.$options = mergeOptions(
+      // 得到
+      /**
+       * {
+       *  components:
+       *  directives: 
+       *  filters:
+       *  _base
+       * }
+      */
+      resolveConstructorOptions(vm.constructor),
+      // options
+      options || {},
+      // vm
+      vm
+    );
+    function resolveConstructorOptions(Ctor) {
+      var options = Ctor.options;
+      if (Ctor.super) {
+        var superOptions = resolveConstructorOptions(Ctor.super);
+        var cachedSuperOptions = Ctor.superOptions;
+        if (superOptions !== cachedSuperOptions) {
+          // super option changed,
+          // need to resolve new options.
+          Ctor.superOptions = superOptions;
+          // check if there are any late-modified/attached options (#4976)
+          var modifiedOptions = resolveModifiedOptions(Ctor);
+          // update base extend options
+          if (modifiedOptions) {
+            extend(Ctor.extendOptions, modifiedOptions);
+          }
+          options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions);
+          if (options.name) {
+            options.components[options.name] = Ctor;
+          }
+        }
+      }
+      return options
+    }
+
+
+    function mergeOptions(
+      parent,
+      child,
+      vm
+    ) {
+      {
+        // 监测子组件的option，第一次无
+        checkComponents(child);
+      }
+
+      if (typeof child === 'function') {
+        child = child.options;
+      }
+      // 初始化props
+      normalizeProps(child, vm);
+      // 初始化inject
+      normalizeInject(child, vm);
+      // 初始化directives
+      normalizeDirectives(child);
+
+      // Apply extends and mixins on the child options,
+      // but only if it is a raw options object that isn't
+      // the result of another mergeOptions call.
+      // Only merged options has the _base property.
+      if (!child._base) {
+        // 初始化options的extend
+        if (child.extends) {
+          parent = mergeOptions(parent, child.extends, vm);
+        }
+         // 初始化options的mixins
+        if (child.mixins) {
+          for (var i = 0, l = child.mixins.length; i < l; i++) {
+            parent = mergeOptions(parent, child.mixins[i], vm);
+          }
+        }
+      }
+
+      var options = {};
+      var key;
+         /**
+       * {
+       *  components:
+       *  directives: 
+       *  filters:
+       *  _base
+       * }
+      */
+    //  合并到options
+      for (key in parent) {
+        mergeField(key);
+      }
+      // opions合并到options
+      for (key in child) {
+        if (!hasOwn(parent, key)) {
+          mergeField(key);
+        }
+      }
+      // merge方法
+      function mergeField(key) {
+        var strat = strats[key] || defaultStrat;
+        options[key] = strat(parent[key], child[key], vm, key);
+      }
+      // 得到options
+      return options
+    }
+
+    
+    function checkComponents(options) {
+      for (var key in options.components) {
+        validateComponentName(key);
+      }
+    }
+  </script>
+</body>
+
+</html>

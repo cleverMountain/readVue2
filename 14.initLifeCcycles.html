@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    initLifecycle(vm);
+
+    function initLifecycle(vm) {
+      var options = vm.$options;
+
+      // locate first non-abstract parent
+      var parent = options.parent;
+      if (parent && !options.abstract) {
+        while (parent.$options.abstract && parent.$parent) {
+          parent = parent.$parent;
+        }
+        parent.$children.push(vm);
+      }
+      // 在vm上添加了$parent,$root,$$children,$refs,$watcher.....
+      vm.$parent = parent;
+      vm.$root = parent ? parent.$root : vm;
+
+      vm.$children = [];
+      vm.$refs = {};
+
+      vm._watcher = null;
+      vm._inactive = null;
+      vm._directInactive = false;
+      vm._isMounted = false;
+      vm._isDestroyed = false;
+      vm._isBeingDestroyed = false;
+    }
+  </script>
+</body>
+
+</html>
