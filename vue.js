@@ -9,7 +9,6 @@
       (global = global || self, global.Vue = factory());
 }(this, function () {
   'use strict';
-
   /*  */
 
   var emptyObject = Object.freeze({});
@@ -947,6 +946,7 @@
      */
     // 给valeu添加__ob__
     def(value, '__ob__', this);
+    debugger
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
@@ -1012,6 +1012,7 @@
    */
 
   function observe(value, asRootData) {
+    
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1049,6 +1050,7 @@
     customSetter,
     shallow
   ) {
+    
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1063,7 +1065,7 @@
     if ((!getter || setter) && arguments.length === 2) {
       val = obj[key];
     }
-
+    // 对对象递归
     var childOb = !shallow && observe(val);
 
     Object.defineProperty(obj, key, {
@@ -4104,7 +4106,6 @@
       }
     }
     callHook(vm, 'beforeMount');
-
     var updateComponent;
     /* istanbul ignore if */
     if (config.performance && mark) {
@@ -4274,7 +4275,6 @@
   }
 
   function callHook(vm, hook) {
-
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4526,6 +4526,7 @@
         );
       }
     }
+    debugger
     this.value = this.lazy
       ? undefined
       : this.get();
@@ -4535,6 +4536,7 @@
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get() {
+ 
     pushTarget(this);
     var value;
     var vm = this.vm;
@@ -4802,6 +4804,7 @@
       }
     }
     // observe data
+  debugger
     observe(data, true /* asRootData */);
   }
 
@@ -4822,6 +4825,7 @@
   var computedWatcherOptions = { lazy: true };
 
   function initComputed(vm, computed) {
+  
     // $flow-disable-line
     var watchers = vm._computedWatchers = Object.create(null);
     // computed properties are just getters during SSR
@@ -5045,6 +5049,7 @@
     
       // merge options
       if (options && options._isComponent) {
+   
         // 优化      内部的    组件     实例  instance
         // optimize internal component instantiation
         // 因为    动态(充满活力)
@@ -5067,13 +5072,13 @@
  
       // expose real self
       vm._self = vm;
-      // 初始化生命周期
-      debugger
+      // 初始化生命周
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
       initRender(vm);
       callHook(vm, 'beforeCreate');
+      debugger
       initInjections(vm); // resolve injections before data/props
       // 初始化状态
       initState(vm);

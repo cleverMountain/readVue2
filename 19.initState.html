@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src="./vue.js"></script>
+
+  <script>
+    // 展位的get与set
+    function noop(a, b, c) { }
+    const descripter = {
+      enumerable: true,
+      configurable: true,
+      get: noop,
+      set: noop
+    }
+    // 代理
+    function proxy(vm, data, key) {
+      descripter.get = function () {
+        return vm[data][key]
+      }
+      descripter.set = function (val) {
+        vm[data][key] = val
+      }
+      Object.defineProperty(vm, key, descripter)
+    }
+    function initMethods(vm, methods) {
+      for (key in methods) {
+        vm[key] = methods[key].bind(vm)
+      }
+    }
+    function initData(vm) {
+      const { data, methods } = vm.$options
+      dataTmp = vm._data = typeof data === 'function' ? data.call(vm) : data
+      // proxy(vm, '_data', key)
+      let keys = Object.keys(dataTmp)
+      let len = keys.length
+      while (len--) {
+        let key = keys[len]
+        proxy(vm, '_data', key)
+      }
+
+      // 监听数据
+      observe(data, true /* asRootData */);
+      console.log(vm)
+    }
+    function hasOwn(obj, key) {
+      return hasOwnProperty.call(obj, key)
+    }
+
+
+
+    uid = 0
+    var Dep = function Dep() {
+      this.id = uid++;
+      this.subs = [];
+    };
+    Dep.prototype.addSub = function addSub(sub) {
+      this.subs.push(sub);
+    };
+    Dep.prototype.removeSub = function removeSub(sub) {
+      remove(this.subs, sub);
+    };
+    Dep.prototype.depend = function depend() {
+      if (Dep.target) {
+        Dep.target.addDep(this);
+      }
+    };
+    Dep.prototype.notify = function notify() {
+      // stabilize the subscriber list first
+      var subs = this.subs.slice();
+
+      for (var i = 0, l = subs.length; i < l; i++) {
+        subs[i].update();
+      }
+    };
+    // The current target watcher being evaluated.
+    // This is globally unique because only one watcher
+    // can be evaluated at a time.
+    Dep.target = null;
+    var targetStack = [];
+    function pushTarget(target) {
+      targetStack.push(target);
+      Dep.target = target;
+    }
+    function popTarget() {
+      targetStack.pop();
+      Dep.target = targetStack[targetStack.length - 1];
+    }
+
+
+    function observe(value, asRootData) {
+      var ob;
+      ob = new Observer(value);
+
+      return ob
+    }
+    function def(obj, key, val, enumerable) {
+      Object.defineProperty(obj, key, {
+        value: val,
+        enumerable: !!enumerable,
+        writable: true,
+        configurable: true
+      });
+    }
+    var Observer = function Observer(value) {
+      this.value = value;
+      // 收集依赖
+      this.dep = new Dep();
+      this.vmCount = 0;
+      // 给valeu添加__ob__
+      if (typeof value === 'object') {
+        def(value, '__ob__', this);
+      }
+      this.walk(value);
+    };
+    Observer.prototype.walk = function walk(obj) {
+      var keys = Object.keys(obj);
+      for (var i = 0; i < keys.length; i++) {
+        defineReactive$$1(obj, keys[i]);
+      }
+    };
+
+    function defineReactive$$1(
+      obj,
+      key,
+      val,
+      customSetter,
+      shallow
+    ) {
+      var dep = new Dep();
+      var property = Object.getOwnPropertyDescriptor(obj, key);
+      if (property && property.configurable === false) {
+        return
+      }
+
+      // cater for pre-defined getter/setters
+      // 用户自己定义了getter和setter
+      var getter = property && property.get;
+      var setter = property && property.set;
+      if ((!getter || setter) && arguments.length === 2) {
+        val = obj[key];
+      }
+      // 对对象递归
+      var childOb = !shallow && observe(val);
+
+      Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        get: function reactiveGetter() {
+
+          var value = getter ? getter.call(obj) : val;
+          if (Dep.target) {
+
+            dep.depend();
+            if (childOb) {
+              childOb.dep.depend();
+              if (Array.isArray(value)) {
+                dependArray(value);
+              }
+            }
+          }
+          return value
+        },
+        set: function reactiveSetter(newVal) {
+          var value = getter ? getter.call(obj) : val;
+          /* eslint-disable no-self-compare */
+          if (newVal === value || (newVal !== newVal && value !== value)) {
+            return
+          }
+          childOb = !shallow && observe(newVal);
+          debugger
+          dep.notify();
+        }
+      });
+    }
+
+
+
+
+
+
+    function initState(vm) {
+      const { data, methods } = vm.$options
+      initMethods(vm, methods)
+      initData(vm)
+
+    }
+
+
+
+
+
+
+
+
+
+
+    function initMixin(Vue) {
+      Vue.prototype._init = function (options) {
+        const vm = this
+        vm.$options = options
+        initState(vm);
+      }
+    }
+    function Vue(options) {
+      this._init(options);
+    }
+    initMixin(Vue)
+  </script>
+  <script>
+
+    const vm = new Vue({
+      el: '#app',
+      data: {
+
+        name: '我是若川',
+        obj: {
+          a: 1
+        }
+
+      },
+      methods: {
+        sayName() {
+          return this.name
+        },
+        changeName() {
+          this.name = 1
+          return this.name
+        }
+      },
+    })
+    console.log(vm.sayName())
+    console.log(vm.changeName())
+  </script>
+</body>
+
+</html>
