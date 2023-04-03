@@ -946,7 +946,6 @@
      */
     // 给valeu添加__ob__
     def(value, '__ob__', this);
-    debugger
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
@@ -4127,13 +4126,16 @@
       };
     } else {
       updateComponent = function () {
+       debugger
         vm._update(vm._render(), hydrating);
+       
       };
     }
 
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
+
     new Watcher(vm, updateComponent, noop, {
       before: function before() {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4526,7 +4528,6 @@
         );
       }
     }
-    debugger
     this.value = this.lazy
       ? undefined
       : this.get();
@@ -4804,7 +4805,6 @@
       }
     }
     // observe data
-  debugger
     observe(data, true /* asRootData */);
   }
 
@@ -5078,7 +5078,6 @@
       initEvents(vm);
       initRender(vm);
       callHook(vm, 'beforeCreate');
-      debugger
       initInjections(vm); // resolve injections before data/props
       // 初始化状态
       initState(vm);
@@ -5093,6 +5092,7 @@
       }
 
       if (vm.$options.el) {
+  
         let d = vm.$mount(vm.$options.el);
         console.log(d)
 
@@ -6029,6 +6029,7 @@
       ownerArray,
       index
     ) {
+      debugger
       if (isDef(vnode.elm) && isDef(ownerArray)) {
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
@@ -6627,7 +6628,7 @@
           // replacing existing element
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
-
+debugger
           // create new node
           createElm(
             vnode,
@@ -12077,7 +12078,7 @@
         if (config.performance && mark) {
           mark('compile');
         }
-
+debugger
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -12092,10 +12093,12 @@
          *   staticRenderFns: []
          * }
          */
+
         console.log(ref)
-   
+        // 得到render函数
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
+        // render函数挂载到options上
         options.render = render;
         options.staticRenderFns = staticRenderFns;
 
