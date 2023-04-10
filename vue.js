@@ -1070,7 +1070,7 @@
       enumerable: true,
       configurable: true,
       get: function reactiveGetter() {
-
+debugger
         var value = getter ? getter.call(obj) : val;
 
         if (Dep.target) {
@@ -1085,6 +1085,7 @@
         return value
       },
       set: function reactiveSetter(newVal) {
+        debugger
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -5068,7 +5069,7 @@
       // expose real self
       vm._self = vm;
       // 初始化生命周期
-      debugger
+   
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
