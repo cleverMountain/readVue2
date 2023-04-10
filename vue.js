@@ -9,7 +9,6 @@
       (global = global || self, global.Vue = factory());
 }(this, function () {
   'use strict';
-
   /*  */
 
   var emptyObject = Object.freeze({});
@@ -1012,6 +1011,7 @@
    */
 
   function observe(value, asRootData) {
+    
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1049,6 +1049,7 @@
     customSetter,
     shallow
   ) {
+    
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1063,7 +1064,7 @@
     if ((!getter || setter) && arguments.length === 2) {
       val = obj[key];
     }
-
+    // 对对象递归
     var childOb = !shallow && observe(val);
 
     Object.defineProperty(obj, key, {
@@ -4105,7 +4106,6 @@ debugger
       }
     }
     callHook(vm, 'beforeMount');
-
     var updateComponent;
     /* istanbul ignore if */
     if (config.performance && mark) {
@@ -4127,13 +4127,16 @@ debugger
       };
     } else {
       updateComponent = function () {
+       debugger
         vm._update(vm._render(), hydrating);
+       
       };
     }
 
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
+
     new Watcher(vm, updateComponent, noop, {
       before: function before() {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4275,7 +4278,6 @@ debugger
   }
 
   function callHook(vm, hook) {
-
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4536,6 +4538,7 @@ debugger
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get() {
+ 
     pushTarget(this);
     var value;
     var vm = this.vm;
@@ -4823,6 +4826,7 @@ debugger
   var computedWatcherOptions = { lazy: true };
 
   function initComputed(vm, computed) {
+  
     // $flow-disable-line
     var watchers = vm._computedWatchers = Object.create(null);
     // computed properties are just getters during SSR
@@ -5046,6 +5050,7 @@ debugger
     
       // merge options
       if (options && options._isComponent) {
+   
         // 优化      内部的    组件     实例  instance
         // optimize internal component instantiation
         // 因为    动态(充满活力)
@@ -5068,8 +5073,12 @@ debugger
  
       // expose real self
       vm._self = vm;
+<<<<<<< HEAD
       // 初始化生命周期
    
+=======
+      // 初始化生命周
+>>>>>>> c1fd035428c62cbcd7679e6e622188561ccd1e0d
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
@@ -5089,6 +5098,7 @@ debugger
       }
 
       if (vm.$options.el) {
+  
         let d = vm.$mount(vm.$options.el);
         console.log(d)
 
@@ -6025,6 +6035,7 @@ debugger
       ownerArray,
       index
     ) {
+      debugger
       if (isDef(vnode.elm) && isDef(ownerArray)) {
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
@@ -6623,7 +6634,7 @@ debugger
           // replacing existing element
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
-
+debugger
           // create new node
           createElm(
             vnode,
@@ -12073,7 +12084,7 @@ debugger
         if (config.performance && mark) {
           mark('compile');
         }
-
+debugger
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -12088,10 +12099,12 @@ debugger
          *   staticRenderFns: []
          * }
          */
+
         console.log(ref)
-   
+        // 得到render函数
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
+        // render函数挂载到options上
         options.render = render;
         options.staticRenderFns = staticRenderFns;
 
