@@ -29,7 +29,23 @@ export function initMixin(Vue) {
                 console.log(el)
 
                 //<div id="app"> hello {{msg}}</div>
-                //变成ast语法树
+                //变成ast语法树{}  vdom {}
+
+                /**
+                 *  ast语法树
+                 * {
+                 *  tag: 'div'
+                 *  attrs: [{id: "app"}],
+                 *  type: 1
+                 *  children: [
+                 *    {
+                 *      tag: null,
+                 *      txtx: 'hello',
+                 *      type: 3
+                 *    }
+                 *  ]
+                 * }
+                 */
                let ast =  compileToFunction(el)
                //render()
 
