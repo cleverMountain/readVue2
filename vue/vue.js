@@ -1201,7 +1201,7 @@
    * value into the final value.
    */
   var strats = config.optionMergeStrategies;
-debugger
+
   /**
    * Options with restrictions
    */
@@ -5068,6 +5068,8 @@ debugger
         initInternalComponent(vm, options);
 
       } else {
+        let d = resolveConstructorOptions(vm.constructor)
+        console.log(d)
         debugger
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
@@ -5210,7 +5212,7 @@ debugger
 
   function initMixin$1(Vue) {
     Vue.mixin = function (mixin) {
-      debugger
+   
       this.options = mergeOptions(this.options, mixin);
       return this
     };

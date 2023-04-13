@@ -1,17 +1,18 @@
 import { observe } from "../Observe/index.js"
-import {callHook} from "../lifeCycle/index.js"
+
 
 function initState(vm) {
   console.log(vm)
+ 
+
   const opts = vm.$options;
-  // beforeCreate只有Vue实例
-  callHook(vm, "beforeCreate")
+
+
   // 初始化方法
   initMethods(vm, opts.methods)
   // 初始化data
   initData(vm);
-  // 方法和data已经被初始化了
-  callHook(vm, "created")
+ 
 }
 
 function initMethods(vm, methods) {
@@ -22,6 +23,7 @@ function initMethods(vm, methods) {
 }
 function initData(vm) {
   let data = vm.$options.data
+ 
   // 判断data是否是函数
   if (typeof data === 'function') {
     vm._data = data.call(vm)

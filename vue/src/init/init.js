@@ -1,14 +1,20 @@
 import Vue from "../index.js";
+import { callHook } from "../lifeCycle/index.js"
 import { initState } from "./initStatus.js";
 import { compileToFunction } from "../compiler/index.js"
-import {mountComponent} from "../lifeCycle/index.js"
+import { mountComponent } from "../lifeCycle/index.js"
+import { mergeOptions } from "../lifeCycle/utils.js"
 
 function initMixin(Vue) {
   Vue.prototype._init = function (options) {
 
     var vm = this;
-    vm.$options = options
+    vm.$options = mergeOptions({}, options)
+    // beforeCreate只有Vue实例
+    callHook(vm, "beforeCreate")
     initState(vm);
+    // 方法和data已经被初始化了
+    callHook(vm, "created")
     if (vm.$options.el) {
       vm.$mount(vm.$options.el);
     }

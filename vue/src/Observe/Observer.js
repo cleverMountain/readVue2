@@ -23,6 +23,7 @@ function defineReactive(obj, key, val) {
 }
 
 function Observer(value) {
+ 
   this.value = value;
 
 
@@ -39,6 +40,7 @@ function Observer(value) {
 };
 
 Observer.prototype.walk = function walk(obj) {
+
   var keys = Object.keys(obj);
   for (var i = 0; i < keys.length; i++) {
 

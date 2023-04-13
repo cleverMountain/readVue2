@@ -26,18 +26,20 @@
         obj: {
           a: 1,
           b: 2,
-          d: 3
+
         }
       },
-      beforeMount() {
-        console.log(1)
-      },
+    
       inject: {
         // a: 1
       },
       created() {
         //   console.log(1)
         //  return 1
+      },
+      beforeMount() {
+      
+        console.log(1)
       },
       methods: {
         sayName() {
