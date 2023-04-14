@@ -1,3 +1,5 @@
+import { observe } from "./index.js"
+
 function def(obj, key, val, enumerable) {
   Object.defineProperty(obj, key, {
     value: val,
@@ -8,11 +10,13 @@ function def(obj, key, val, enumerable) {
 }
 
 function defineReactive(obj, key, val) {
+  // 递归劫持对象数据
+  let childOb = observe(val);
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter() {
-   
+
       return val
     },
     set: function reactiveSetter(newVal) {
@@ -23,9 +27,8 @@ function defineReactive(obj, key, val) {
 }
 
 function Observer(value) {
- 
-  this.value = value;
 
+  this.value = value;
 
 
 
@@ -54,6 +57,7 @@ Observer.prototype.observeArray = function observeArray(items) {
     observe(items[i]);
   }
 };
+
 
 
 export { Observer }
