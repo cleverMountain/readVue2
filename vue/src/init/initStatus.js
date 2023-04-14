@@ -22,6 +22,7 @@ function initMethods(vm, methods) {
   }
 }
 function initData(vm) {
+  
   let data = vm.$options.data
  
   // 判断data是否是函数

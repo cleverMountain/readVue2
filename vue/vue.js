@@ -947,6 +947,7 @@
     // 给valeu添加__ob__
     def(value, '__ob__', this);
     if (Array.isArray(value)) {
+      debugger
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
@@ -3598,7 +3599,7 @@
       var ref = vm.$options;
       var render = ref.render;
       var _parentVnode = ref._parentVnode;
-debugger
+
       if (_parentVnode) {
         vm.$scopedSlots = normalizeScopedSlots(
           _parentVnode.data.scopedSlots,

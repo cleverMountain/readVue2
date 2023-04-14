@@ -10,8 +10,8 @@
 
 <body>
   <div id="app">
-    <h1>{{name}}</h1>
-    <h1>{{obj.a}}</h1>
+    <!-- <h1>{{name}}</h1>
+    <h1>{{obj.a}}</h1> -->
     <!-- <span>{{obj.a}}</span> -->
   </div>
   <script src="./vue.js"></script>
@@ -19,11 +19,12 @@
     const vm = new Vue({
       el: '#app',
       data: {
-        name: '我是若川',
-        obj: {
-          a: 1
-        },
-        d: 1
+        // name: '我是若川',
+        // obj: {
+        //   a: 1
+        // },
+        // d: 1
+        arr: [1, 2, 3]
       },
       beforeMount () {
         console.log(1)
