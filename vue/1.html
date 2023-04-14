@@ -20,9 +20,10 @@
       el: '#app',
       data: {
         // name: '我是若川',
-        // obj: {
-        //   a: 1
-        // },
+        obj: {
+          a: 1,
+          b: 2
+        },
         // d: 1
         arr: [1, 2, 3]
       },
@@ -42,8 +43,10 @@
         }
       },
     })
-    // console.log(vm);
-    console.log(vm.sayName());
+
+    console.log(vm.$set(vm.obj, 'a', 2));
+    vm.$delete(vm.obj, 'b')
+        console.log(vm);
   </script>
 </body>
 

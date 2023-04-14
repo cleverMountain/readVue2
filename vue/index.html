@@ -50,7 +50,10 @@
       },
     })
 
-    vm.arr.push(4);
+    vm.$set(vm.obj, 'a', 2)
+    vm.$set(vm.arr, 2, 10)
+    vm.$delete(vm.obj, 'b')
+    vm.$delete(vm.arr, 2)
   </script>
 </body>
 

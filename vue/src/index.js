@@ -2,6 +2,7 @@
 import { initMixin } from "./init/init.js";
 import { lifecycleMixin } from "./lifeCycle/index.js"
 import { renderMixin } from "./vnode/index.js"
+import { stateMixin } from "./stateMixin/index.js"
 
 function Vue(options) {
 
@@ -13,4 +14,5 @@ function Vue(options) {
 initMixin(Vue);
 lifecycleMixin(Vue) // 混入生命周期_update
 renderMixin(Vue) // 混入render函数
+stateMixin(Vue);
 export default Vue

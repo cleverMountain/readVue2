@@ -20,6 +20,7 @@ function defineReactive(obj, key, val) {
       return val
     },
     set: function reactiveSetter(newVal) {
+      
       val = newVal
 
     }

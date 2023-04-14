@@ -947,7 +947,7 @@
     // 给valeu添加__ob__
     def(value, '__ob__', this);
     if (Array.isArray(value)) {
-      debugger
+
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
@@ -1012,7 +1012,7 @@
    */
 
   function observe(value, asRootData) {
-    
+
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1068,11 +1068,11 @@
     var childOb = !shallow && observe(val);
 
     Object.defineProperty(obj, key, {
- 
+
       enumerable: true,
       configurable: true,
       get: function reactiveGetter() {
-      
+
         var value = getter ? getter.call(obj) : val;
 
         if (Dep.target) {
@@ -1087,7 +1087,7 @@
         return value
       },
       set: function reactiveSetter(newVal) {
-      
+  
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -1105,7 +1105,7 @@
           val = newVal;
         }
         childOb = !shallow && observe(newVal);
-        // debugger
+
         dep.notify();
       }
     });
@@ -1128,9 +1128,11 @@
       return val
     }
     if (key in target && !(key in Object.prototype)) {
+   
       target[key] = val;
       return val
     }
+
     var ob = (target).__ob__;
     if (target._isVue || (ob && ob.vmCount)) {
       warn(
@@ -1170,6 +1172,7 @@
       );
       return
     }
+    debugger
     if (!hasOwn(target, key)) {
       return
     }
@@ -1323,7 +1326,7 @@
     childVal
   ) {
 
-    
+
 
     var res = childVal
       ? parentVal
@@ -4132,16 +4135,16 @@
       };
     } else {
       updateComponent = function () {
-    
+
         vm._update(vm._render(), hydrating);
-       
+
       };
     }
 
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
-   
+
     new Watcher(vm, updateComponent, noop, {
       before: function before() {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4497,7 +4500,7 @@
     options,
     isRenderWatcher
   ) {
-  
+
     this.vm = vm;
     if (isRenderWatcher) {
       vm._watcher = this;
@@ -4696,7 +4699,7 @@
   };
   // 代理
   function proxy(target, sourceKey, key) {
-   
+
     // function proxyGetter 重写了noop
     sharedPropertyDefinition.get = function proxyGetter() {
       return this[sourceKey][key]
@@ -4810,13 +4813,13 @@
           vm
         );
       } else if (!isReserved(key)) {
-      
+
         // 对_data进行代理
         proxy(vm, "_data", key);
       }
     }
     // observe data
-   
+
     observe(data, true /* asRootData */);
   }
 
@@ -4837,7 +4840,7 @@
   var computedWatcherOptions = { lazy: true };
 
   function initComputed(vm, computed) {
-  
+
     // $flow-disable-line
     var watchers = vm._computedWatchers = Object.create(null);
     // computed properties are just getters during SSR
@@ -5010,7 +5013,6 @@
     }
     Object.defineProperty(Vue.prototype, '$data', dataDef);
     Object.defineProperty(Vue.prototype, '$props', propsDef);
-
     Vue.prototype.$set = set;
     Vue.prototype.$delete = del;
 
@@ -5058,10 +5060,10 @@
 
       // a flag to avoid this being observed
       vm._isVue = true;
-    
+
       // merge options
       if (options && options._isComponent) {
-   
+
         // 优化      内部的    组件     实例  instance
         // optimize internal component instantiation
         // 因为    动态(充满活力)
@@ -5084,7 +5086,7 @@
       {
         initProxy(vm);
       }
- 
+
       // expose real self
       vm._self = vm;
       // 初始化生命周
@@ -5215,7 +5217,7 @@
 
   function initMixin$1(Vue) {
     Vue.mixin = function (mixin) {
-   
+
       this.options = mergeOptions(this.options, mixin);
       return this
     };
@@ -6045,7 +6047,7 @@
       ownerArray,
       index
     ) {
-      
+
       if (isDef(vnode.elm) && isDef(ownerArray)) {
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
@@ -11842,14 +11844,14 @@
 
       // compile 首次进入complied函数
       var compiled = compile(template, options);
-       /**
-         *  return {
-         *    ast: ast,   ast语法树
-         *    render: code.render, render函数
-         *    staticRenderFns: code.staticRenderFns
-         *  }
-         */
-        console.log(compiled)
+      /**
+        *  return {
+        *    ast: ast,   ast语法树
+        *    render: code.render, render函数
+        *    staticRenderFns: code.staticRenderFns
+        *  }
+        */
+      console.log(compiled)
       // check compilation errors/tips
       {
         if (compiled.errors && compiled.errors.length) {
@@ -12047,7 +12049,7 @@
     hydrating
   ) {
     // 拿到dom节点
-   
+
     el = el && query(el);
 
     /* istanbul ignore if */
