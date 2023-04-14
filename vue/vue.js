@@ -1321,7 +1321,9 @@
     parentVal,
     childVal
   ) {
-    debugger
+
+    
+
     var res = childVal
       ? parentVal
         ? parentVal.concat(childVal)
@@ -3596,7 +3598,7 @@
       var ref = vm.$options;
       var render = ref.render;
       var _parentVnode = ref._parentVnode;
-
+debugger
       if (_parentVnode) {
         vm.$scopedSlots = normalizeScopedSlots(
           _parentVnode.data.scopedSlots,
@@ -5070,7 +5072,7 @@
       } else {
         let d = resolveConstructorOptions(vm.constructor)
         console.log(d)
-        debugger
+
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
           options || {},
