@@ -1,11 +1,22 @@
 import { patch } from "../vnode/patch.js"
+import Watcher  from "../Observe/watcher.js"
 
 function mountComponent(vm, el) {
   // 
   callHook(vm, 'beforeMount');
-  const vnode = vm._render()
-  console.log(vnode)
-  vm._update(vm._render())
+  // const vnode = vm._render()
+  // console.log(vnode)
+  let updateComponent = function () {
+
+    vm._update(vm._render())
+
+  };
+  // 参数vm 渲染函数 cb options
+
+  new Watcher(vm, updateComponent, function () { }, {});
+
+  // dom已经挂在了
+  callHook(vm, 'mounted');
 }
 
 
@@ -23,7 +34,7 @@ function callHook(vm, hook) {
 function lifecycleMixin(Vue) {
   // 简化版
   Vue.prototype._update = function (vnode) {
-   
+
     // 虚拟dom，通过patch将询idom转化为真实dom
     // 通过比较新旧dom
     const vm = this

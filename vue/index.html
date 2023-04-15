@@ -29,7 +29,7 @@
         },
         arr: [1, 2, 3]
       },
-    
+
       inject: {
         // a: 1
       },
@@ -38,7 +38,7 @@
         //  return 1
       },
       beforeMount() {
-      
+
         console.log(1)
       },
       methods: {
@@ -50,10 +50,15 @@
       },
     })
 
-    vm.$set(vm.obj, 'a', 2)
-    vm.$set(vm.arr, 2, 10)
-    vm.$delete(vm.obj, 'b')
-    vm.$delete(vm.arr, 2)
+
+    setTimeout(() => {
+      vm.$set(vm.obj, 'a', 2)
+      // vm.$set(vm.arr, 2, 10)
+      vm.$delete(vm.obj, 'b')
+      // vm.$delete(vm.arr, 2)
+      // // 调用该方法可实现视图更新
+      // vm._update(vm._render())
+    }, 1000)
   </script>
 </body>
 

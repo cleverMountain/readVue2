@@ -8,6 +8,7 @@ import { parseHTML } from "./parse.js"
 import { generate } from "./generate.js"
 
 function compileToFunction(template) {
+  
   // 创建ast语法树
   const ast = parseHTML(template)
   // 把语法树变成字符串

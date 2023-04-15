@@ -14,7 +14,7 @@ export default function del(target, key) {
   if (!ob) {
     return
   }
-  // ob.dep.notify();
+  ob.dep.notify();
 }
 
 function hasOwn(obj, key) {
