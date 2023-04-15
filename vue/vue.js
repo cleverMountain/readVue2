@@ -1066,6 +1066,7 @@
     }
     // 对对象递归
     var childOb = !shallow && observe(val);
+console.log(Dep.target)
 
     Object.defineProperty(obj, key, {
 
@@ -1172,7 +1173,6 @@
       );
       return
     }
-    debugger
     if (!hasOwn(target, key)) {
       return
     }
@@ -4144,7 +4144,7 @@
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
-
+debugger
     new Watcher(vm, updateComponent, noop, {
       before: function before() {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4549,7 +4549,7 @@
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get() {
-
+    debugger
     pushTarget(this);
     var value;
     var vm = this.vm;
