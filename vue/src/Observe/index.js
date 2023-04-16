@@ -3,14 +3,17 @@ import { Dep } from "./dep.js"
 
 
 function Observer(value) {
+  // 给每一个value添加一个依赖
   this.dep = new Dep();
   this.value = value;
-  // 给valeu添加__ob__
+  // 给每一个value添加__ob__，__ob就是Observer
   def(value, '__ob__', this);
   if (Array.isArray(value)) {
+ 
     // value.__proto__ = arrayMethods
-    // 调用重写的方法
+    // 调用重写的方法,push，pop等，会触发监听
     protoAugment(value, arrayMethods);
+    // 首次加载，如果数组某项的值是原始值，直接就把值放上去了
     this.observeArray(value);
   } else {
     // 对象时
@@ -35,6 +38,7 @@ Observer.prototype.observeArray = function observeArray(items) {
 
 
 function observe(value) {
+  debugger
   // 如果是原始值直接就返回值了
   if (typeof value !== 'object' || value == null) {
     return;
@@ -86,9 +90,9 @@ function defineReactive(obj, key, val) {
         dep.depend();
         if (childOb) {
           childOb.dep.depend();
-          if (Array.isArray(val)) {
-            dependArray(val);
-          }
+          // if (Array.isArray(val)) {
+          //   dependArray(val);
+          // }
         }
       }
       return val

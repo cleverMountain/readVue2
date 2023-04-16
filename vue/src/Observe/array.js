@@ -46,7 +46,7 @@ methodsToPatch.forEach(function (method) {
     }
     if (inserted) { ob.observeArray(inserted); }
 
-    // ob.dep.notify();
+    ob.dep.notify();
     return result
   }
   def(arrayMethods, method, mutator);

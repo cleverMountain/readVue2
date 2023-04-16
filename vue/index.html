@@ -11,11 +11,11 @@
 <body>
   <div id="app">
     <h1>
-      {{name}}11{{obj.b}}
+      {{arr}}
     </h1>
-    <H2>
+    <h2>
       {{obj.a}}
-    </H2>
+    </h2>
   </div>
   <script type="module">
     import Vue from "./src/index.js"
@@ -52,12 +52,13 @@
 
 
     setTimeout(() => {
-      vm.$set(vm.obj, 'a', 2)
-      // vm.$set(vm.arr, 2, 10)
-      vm.$delete(vm.obj, 'b')
+      // vm.$set(vm.obj, 'a', 2)
+      // // vm.$set(vm.arr, 2, 10)
+      // vm.$delete(vm.obj, 'b')
       // vm.$delete(vm.arr, 2)
       // // 调用该方法可实现视图更新
       // vm._update(vm._render())
+      // vm.arr.push(4)
     }, 1000)
   </script>
 </body>
