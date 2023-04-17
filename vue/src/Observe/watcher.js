@@ -1,8 +1,13 @@
 import { pushTarget, popTarget } from "./dep.js"
+import { queueWatcher } from "../stateMixin/nextTick.js"
 
 let uid = 0;
 
-
+/**
+ * 1.一个模板一个Watcher(data)
+ * 2.一个Watcher多个dep
+ * 3.如果多个组件共用了某些数据，则一个数据对应多个Watcher
+ */
 function Watcher(
   vm,
   expOrFn,
@@ -14,7 +19,7 @@ function Watcher(
 
   vm._watcher = this;
 
-
+  this.active = true
   this.cb = cb;
   this.id = ++uid;
 
@@ -23,8 +28,9 @@ function Watcher(
   this.depIds = new Set();
 
 
- 
+
   if (typeof expOrFn === 'function') {
+    // 更新视图方法
     this.getter = expOrFn;
   }
   // 执行getter就是渲染函数vm._update(vm._render())
@@ -84,14 +90,15 @@ Watcher.prototype.cleanupDeps = function cleanupDeps() {
  */
 Watcher.prototype.update = function update() {
   /* istanbul ignore else */
-  // if (this.lazy) {
-  //   this.dirty = true;
-  // } else if (this.sync) {
-  //   this.run();
-  // } else {
-  //   queueWatcher(this);
-  // }
-  this.get()
+  if (this.lazy) {
+    this.dirty = true;
+  } else if (this.sync) {
+    this.run();
+  } else {
+    debugger
+    queueWatcher(this);
+  }
+  // this.get()
 };
 
 /**
@@ -100,25 +107,8 @@ Watcher.prototype.update = function update() {
  */
 Watcher.prototype.run = function run() {
   if (this.active) {
-    var value = this.get();
-    if (
-      value !== this.value ||
-      // Deep watchers and watchers on Object/Arrays should fire even
-      // when the value is the same, because the value may
-      // have mutated.
-      isObject(value) ||
-      this.deep
-    ) {
-      // set new value
-      var oldValue = this.value;
-      this.value = value;
-      if (this.user) {
-        var info = "callback for watcher \"" + (this.expression) + "\"";
-        invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info);
-      } else {
-        this.cb.call(this.vm, value, oldValue);
-      }
-    }
+    debugger
+    this.get();
   }
 };
 
@@ -135,6 +125,7 @@ Watcher.prototype.evaluate = function evaluate() {
  * Depend on all deps collected by this watcher.
  */
 Watcher.prototype.depend = function depend() {
+
   var i = this.deps.length;
   while (i--) {
     this.deps[i].depend();

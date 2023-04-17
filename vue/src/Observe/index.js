@@ -3,7 +3,8 @@ import { Dep } from "./dep.js"
 
 
 function Observer(value) {
-  // 给每一个value添加一个依赖
+
+  // 给每一个对象value添加一个依赖,数组也加了一个dep
   this.dep = new Dep();
   this.value = value;
   // 给每一个value添加__ob__，__ob就是Observer
@@ -38,7 +39,7 @@ Observer.prototype.observeArray = function observeArray(items) {
 
 
 function observe(value) {
-  debugger
+
   // 如果是原始值直接就返回值了
   if (typeof value !== 'object' || value == null) {
     return;
@@ -87,6 +88,7 @@ function defineReactive(obj, key, val) {
        * beforeMount与mounted之间
        */
       if (Dep.target) {
+
         dep.depend();
         if (childOb) {
           childOb.dep.depend();

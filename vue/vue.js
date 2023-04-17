@@ -4144,7 +4144,7 @@ console.log(Dep.target)
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
-debugger
+
     new Watcher(vm, updateComponent, noop, {
       before: function before() {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4549,7 +4549,7 @@ debugger
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get() {
-    debugger
+   
     pushTarget(this);
     var value;
     var vm = this.vm;
@@ -4613,12 +4613,14 @@ debugger
    * Will be called when a dependency changes.
    */
   Watcher.prototype.update = function update() {
+    
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true;
     } else if (this.sync) {
       this.run();
     } else {
+      
       queueWatcher(this);
     }
   };
@@ -4628,6 +4630,7 @@ debugger
    * Will be called by the scheduler.
    */
   Watcher.prototype.run = function run() {
+    debugger
     if (this.active) {
       var value = this.get();
       if (

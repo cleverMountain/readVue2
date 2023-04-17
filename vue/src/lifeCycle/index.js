@@ -12,7 +12,7 @@ function mountComponent(vm, el) {
 
   };
   // 参数vm 渲染函数 cb options
-
+  // 一个模板一个Watcher
   new Watcher(vm, updateComponent, function () { }, {});
 
   // dom已经挂在了

@@ -16,6 +16,9 @@
     <h2>
       {{obj.a}}
     </h2>
+    <h2>
+      {{obj.b}}
+    </h2>
   </div>
   <script type="module">
     import Vue from "./src/index.js"
@@ -59,7 +62,13 @@
       // // 调用该方法可实现视图更新
       // vm._update(vm._render())
       // vm.arr.push(4)
+      vm.obj.a = 20
+      vm.obj.a = 40
     }, 1000)
+    console.log(2)
+    vm.$nextTick(() => {
+      console.log('我是nextTick')
+    })
   </script>
 </body>
 
