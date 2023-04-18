@@ -18,7 +18,16 @@ function Watcher(
   this.vm = vm;
 
   vm._watcher = this;
-
+  if (options) {
+    this.deep = !!options.deep;
+    this.user = !!options.user;
+    this.lazy = !!options.lazy;
+    this.sync = !!options.sync;
+    this.before = options.before;
+  } else {
+    this.deep = this.user = this.lazy = this.sync = false;
+  }
+  this.expression = expOrFn.toString();
   this.active = true
   this.cb = cb;
   this.id = ++uid;
@@ -28,13 +37,17 @@ function Watcher(
   this.depIds = new Set();
 
 
-
-  if (typeof expOrFn === 'function') {
-    // 更新视图方法
-    this.getter = expOrFn;
-  }
   // 执行getter就是渲染函数vm._update(vm._render())
-  this.get()
+  if (typeof expOrFn === 'function') {
+
+    this.getter = expOrFn;
+  } else {
+    this.getter = parsePath(expOrFn);
+  }
+  // // 更新视图方法 
+  this.value = this.lazy
+    ? undefined
+    : this.get();
 };
 
 /**
@@ -44,8 +57,20 @@ Watcher.prototype.get = function get() {
   pushTarget(this);
   var value;
   var vm = this.vm;
-  value = this.getter.call(vm, vm);
-  popTarget()
+  try {
+    value = this.getter.call(vm, vm);
+  } catch (e) {
+
+  } finally {
+
+    if (this.deep) {
+      // traverse(value);
+    }
+    popTarget();
+    // this.cleanupDeps();
+  }
+
+
   return value
 };
 
@@ -95,7 +120,7 @@ Watcher.prototype.update = function update() {
   } else if (this.sync) {
     this.run();
   } else {
-    debugger
+
     queueWatcher(this);
   }
   // this.get()
@@ -107,7 +132,7 @@ Watcher.prototype.update = function update() {
  */
 Watcher.prototype.run = function run() {
   if (this.active) {
-    debugger
+
     this.get();
   }
 };
@@ -151,4 +176,17 @@ Watcher.prototype.teardown = function teardown() {
   }
 };
 
+
+
+
+function parsePath(path) {
+  var segments = path.split('.');
+  return function (obj) {
+    for (var i = 0; i < segments.length; i++) {
+      if (!obj) { return }
+      obj = obj[segments[i]];
+    }
+    return obj
+  }
+}
 export default Watcher

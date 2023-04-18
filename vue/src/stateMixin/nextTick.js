@@ -32,6 +32,7 @@ function nextTick(cb, ctx) {
   callbacks.push(function () {
     cb.call(ctx);
   });
+  // 防抖
   if (!pending) {
     pending = true;
     timerFunc();
@@ -41,16 +42,19 @@ function nextTick(cb, ctx) {
 
 
 function queueWatcher(watcher) {
+
   var id = watcher.id;
+  console.log(id)
   if (has[id] == null) {
     has[id] = true;
     if (!flushing) {
+     
       queue.push(watcher);
     }
     // queue the flush
     if (!waiting) {
       waiting = true;
-
+     
       nextTick(flushSchedulerQueue);
     }
   }

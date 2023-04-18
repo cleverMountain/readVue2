@@ -4529,6 +4529,7 @@ console.log(Dep.target)
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn;
     } else {
+
       this.getter = parsePath(expOrFn);
       if (!this.getter) {
         this.getter = noop;
@@ -4630,7 +4631,6 @@ console.log(Dep.target)
    * Will be called by the scheduler.
    */
   Watcher.prototype.run = function run() {
-    debugger
     if (this.active) {
       var value = this.get();
       if (
@@ -4677,6 +4677,7 @@ console.log(Dep.target)
    * Remove self from all dependencies' subscriber list.
    */
   Watcher.prototype.teardown = function teardown() {
+    debugger
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
@@ -4728,6 +4729,7 @@ console.log(Dep.target)
     }
     if (opts.computed) { initComputed(vm, opts.computed); }
     if (opts.watch && opts.watch !== nativeWatch) {
+      
       initWatch(vm, opts.watch);
     }
   }
@@ -4973,6 +4975,7 @@ console.log(Dep.target)
           createWatcher(vm, key, handler[i]);
         }
       } else {
+    
         createWatcher(vm, key, handler);
       }
     }
@@ -5034,10 +5037,14 @@ console.log(Dep.target)
       if (options.immediate) {
         var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
         pushTarget();
+
+   
         invokeWithErrorHandling(cb, vm, [watcher.value], vm, info);
         popTarget();
       }
+    
       return function unwatchFn() {
+        debugger
         watcher.teardown();
       }
     };

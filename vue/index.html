@@ -14,7 +14,7 @@
       {{arr}}
     </h1>
     <h2>
-      {{obj.a}}
+      {{obj1.a}}
     </h2>
     <h2>
       {{obj.b}}
@@ -30,6 +30,9 @@
           a: 1,
           b: 2,
         },
+        obj1: {
+          a: 1
+        },
         arr: [1, 2, 3]
       },
 
@@ -39,6 +42,16 @@
       created() {
         //   console.log(1)
         //  return 1
+      },
+      watch: {
+        name: {
+          handler(val, oldVal) {
+
+            console.log('new: %s, old: %s', val, oldVal)
+          },
+          immediate: true,
+          deep: true
+        }
       },
       beforeMount() {
 
@@ -62,8 +75,8 @@
       // // 调用该方法可实现视图更新
       // vm._update(vm._render())
       // vm.arr.push(4)
-      vm.obj.a = 20
-      vm.obj.a = 40
+      vm.obj1.a = 20
+      vm.obj.b = 40
     }, 1000)
     console.log(2)
     vm.$nextTick(() => {

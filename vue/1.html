@@ -34,6 +34,16 @@
         console.log(1)
         //  return 1
       },
+      watch: {
+        name: {
+          handler(val, oldVal) {
+debugger
+            console.log('new: %s, old: %s', val, oldVal)
+          },
+          // immediate: true,
+          deep: true
+        }
+      },
       methods: {
         sayName() {
 
@@ -45,7 +55,7 @@
     })
 
     setTimeout(() => {
-      vm.obj.a  = 10
+      vm.name = 10
       // console.log(vm.$set(vm.obj, 'a', 2));
     }, 3000)
     // vm.$delete(vm.obj, 'b')

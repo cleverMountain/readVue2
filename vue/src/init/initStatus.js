@@ -1,5 +1,5 @@
 import { observe } from "../Observe/index.js"
-
+import { initWatch } from "../stateMixin/watch.js"
 
 function initState(vm) {
   console.log(vm)
@@ -12,6 +12,9 @@ function initState(vm) {
   initMethods(vm, opts.methods)
   // 初始化data
   initData(vm);
+  // 初始化watch
+  initWatch(vm, opts.watch);
+
  
 }
 
