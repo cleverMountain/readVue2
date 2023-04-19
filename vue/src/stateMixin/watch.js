@@ -47,19 +47,51 @@ function watch(
 
   options = options || {};
   options.user = true;
+  // debugger
+  // 新建一个watcher
   var watcher = new Watcher(vm, expOrFn, cb, options);
   console.log(watcher.value)
-  debugger
+  // immediate 立即触发
   if (options.immediate) {
-    var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
+    var info = "callback for immediate watcher";
     pushTarget();
+    // 触发watcher的函数  [watcher.value] 参数是数组
     invokeWithErrorHandling(cb, vm, [watcher.value], vm, info);
     popTarget();
   }
   return function unwatchFn() {
+    debugger
     watcher.teardown();
   }
 };
 
 
-export { initWatch, watch }
+
+function invokeWithErrorHandling(
+  handler,
+  context,
+  args,
+  vm,
+  info
+) {
+  var res;
+  try {
+    // watch的回调函数
+    res = args ? handler.apply(context, args) : handler.call(context);
+
+
+    let a = handler()
+
+    if (res && !res._isVue && isPromise(res) && !res._handled) {
+      res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
+      // issue #9511
+      // avoid catch triggering multiple times when nested calls
+      res._handled = true;
+    }
+  } catch (e) {
+    handleError(e, vm, info);
+  }
+  return res
+}
+
+export { initWatch, watch, invokeWithErrorHandling }

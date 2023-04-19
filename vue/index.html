@@ -49,7 +49,7 @@
 
             console.log('new: %s, old: %s', val, oldVal)
           },
-          immediate: true,
+          // immediate: true,
           deep: true
         }
       },
@@ -75,13 +75,12 @@
       // // 调用该方法可实现视图更新
       // vm._update(vm._render())
       // vm.arr.push(4)
-      vm.obj1.a = 20
-      vm.obj.b = 40
-    }, 1000)
-    console.log(2)
-    vm.$nextTick(() => {
-      console.log('我是nextTick')
-    })
+      vm.name = 10
+    }, 3000)
+    // console.log(2)
+    // vm.$nextTick(() => {
+    //   console.log('我是nextTick')
+    // })
   </script>
 </body>
 

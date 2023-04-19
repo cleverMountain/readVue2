@@ -1,5 +1,6 @@
 import { pushTarget, popTarget } from "./dep.js"
 import { queueWatcher } from "../stateMixin/nextTick.js"
+import { invokeWithErrorHandling } from "../stateMixin/watch.js"
 
 let uid = 0;
 
@@ -114,6 +115,10 @@ Watcher.prototype.cleanupDeps = function cleanupDeps() {
  * Will be called when a dependency changes.
  */
 Watcher.prototype.update = function update() {
+ 
+  console.log(this)
+  debugger
+  const {cb, vm, value} = this
   /* istanbul ignore else */
   if (this.lazy) {
     this.dirty = true;
@@ -122,6 +127,9 @@ Watcher.prototype.update = function update() {
   } else {
 
     queueWatcher(this);
+    // 更新值触发回调，拿到新值与旧值
+    invokeWithErrorHandling(cb, vm, [value, vm.name], vm, 'info11')
+   
   }
   // this.get()
 };

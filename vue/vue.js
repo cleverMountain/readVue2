@@ -1066,7 +1066,7 @@
     }
     // 对对象递归
     var childOb = !shallow && observe(val);
-console.log(Dep.target)
+
 
     Object.defineProperty(obj, key, {
 
@@ -1916,12 +1916,13 @@ console.log(Dep.target)
     vm,
     info
   ) {
+    debugger
     var res;
     try {
       res = args ? handler.apply(context, args) : handler.call(context);
-      console.log(res)
+ 
       let a = handler()
-      console.log(a)
+    
       if (res && !res._isVue && isPromise(res) && !res._handled) {
         res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
         // issue #9511
@@ -5033,6 +5034,7 @@ console.log(Dep.target)
       }
       options = options || {};
       options.user = true;
+      
       var watcher = new Watcher(vm, expOrFn, cb, options);
       if (options.immediate) {
         var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
@@ -5044,7 +5046,7 @@ console.log(Dep.target)
       }
     
       return function unwatchFn() {
-        debugger
+       
         watcher.teardown();
       }
     };
@@ -5084,7 +5086,7 @@ console.log(Dep.target)
 
       } else {
         let d = resolveConstructorOptions(vm.constructor)
-        console.log(d)
+
 
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
@@ -5121,7 +5123,7 @@ console.log(Dep.target)
       if (vm.$options.el) {
 
         let d = vm.$mount(vm.$options.el);
-        console.log(d)
+      
 
         return
       }
@@ -11861,7 +11863,7 @@ console.log(Dep.target)
         *    staticRenderFns: code.staticRenderFns
         *  }
         */
-      console.log(compiled)
+  
       // check compilation errors/tips
       {
         if (compiled.errors && compiled.errors.length) {
@@ -11987,7 +11989,7 @@ console.log(Dep.target)
          *    staticRenderFns: code.staticRenderFns
          *  }
          */
-        console.log(compiled)
+      
 
         {
           detectErrors(compiled.ast, warn);
@@ -12120,7 +12122,7 @@ console.log(Dep.target)
          * }
          */
 
-        console.log(ref)
+        
         // 得到render函数
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
@@ -12136,8 +12138,7 @@ console.log(Dep.target)
       }
     }
     let d = mount.call(this, el, hydrating)
-    console.log(d)
-
+ 
     return mount.call(this, el, hydrating)
   };
 
