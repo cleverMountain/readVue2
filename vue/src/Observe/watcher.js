@@ -15,9 +15,9 @@ function Watcher(
   cb,
   options
 ) {
-
+  // new watcher
   this.vm = vm;
-
+  // old watcher
   vm._watcher = this;
   if (options) {
     this.deep = !!options.deep;
@@ -44,6 +44,7 @@ function Watcher(
     this.getter = expOrFn;
   } else {
     this.getter = parsePath(expOrFn);
+
   }
   // // 更新视图方法 
   this.value = this.lazy
@@ -55,11 +56,13 @@ function Watcher(
  * Evaluate the getter, and re-collect dependencies.
  */
 Watcher.prototype.get = function get() {
+  // 同时包含oldwatcher与new watcher可以取到新旧值
   pushTarget(this);
   var value;
   var vm = this.vm;
   try {
     value = this.getter.call(vm, vm);
+
   } catch (e) {
 
   } finally {
@@ -115,10 +118,10 @@ Watcher.prototype.cleanupDeps = function cleanupDeps() {
  * Will be called when a dependency changes.
  */
 Watcher.prototype.update = function update() {
- 
+
   console.log(this)
-  debugger
-  const {cb, vm, value} = this
+
+  // const {cb, vm, value} = this
   /* istanbul ignore else */
   if (this.lazy) {
     this.dirty = true;
@@ -128,8 +131,8 @@ Watcher.prototype.update = function update() {
 
     queueWatcher(this);
     // 更新值触发回调，拿到新值与旧值
-    invokeWithErrorHandling(cb, vm, [value, vm.name], vm, 'info11')
-   
+    // invokeWithErrorHandling(cb, vm, [value, vm.name], vm, 'info11')
+
   }
   // this.get()
 };
@@ -139,9 +142,19 @@ Watcher.prototype.update = function update() {
  * Will be called by the scheduler.
  */
 Watcher.prototype.run = function run() {
+
+
   if (this.active) {
 
-    this.get();
+    let value = this.get(); // 更新时得到的新值
+
+    if (this.user) {
+      let oldVlue = this.value // 第一次调用get绑定的老值
+      this.value = value
+      console.log(oldVlue, this.value)
+      // wtach监听
+      invokeWithErrorHandling(this.cb, this.vm, [oldVlue, value], this.vm, 'info11')
+    }
   }
 };
 
@@ -190,6 +203,7 @@ Watcher.prototype.teardown = function teardown() {
 function parsePath(path) {
   var segments = path.split('.');
   return function (obj) {
+    // 深度监听，通过数组的方式
     for (var i = 0; i < segments.length; i++) {
       if (!obj) { return }
       obj = obj[segments[i]];

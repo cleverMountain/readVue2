@@ -12,6 +12,10 @@
   <div id="app">
     <h1>
       {{arr}}
+     
+    </h1>
+    <h1>
+      {{name}}
     </h1>
     <h2>
       {{obj1.a}}
@@ -44,7 +48,7 @@
         //  return 1
       },
       watch: {
-        name: {
+        'obj1.a': {
           handler(val, oldVal) {
 
             console.log('new: %s, old: %s', val, oldVal)
@@ -75,7 +79,7 @@
       // // 调用该方法可实现视图更新
       // vm._update(vm._render())
       // vm.arr.push(4)
-      vm.name = 10
+      vm.obj1.a = 10
     }, 3000)
     // console.log(2)
     // vm.$nextTick(() => {

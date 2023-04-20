@@ -49,6 +49,7 @@ function watch(
   options.user = true;
   // debugger
   // 新建一个watcher
+  
   var watcher = new Watcher(vm, expOrFn, cb, options);
   console.log(watcher.value)
   // immediate 立即触发
@@ -60,7 +61,7 @@ function watch(
     popTarget();
   }
   return function unwatchFn() {
-    debugger
+
     watcher.teardown();
   }
 };
@@ -83,13 +84,13 @@ function invokeWithErrorHandling(
     let a = handler()
 
     if (res && !res._isVue && isPromise(res) && !res._handled) {
-      res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
+      res.catch(function (e) { return  e + " (Promise/async)" });
       // issue #9511
       // avoid catch triggering multiple times when nested calls
       res._handled = true;
     }
   } catch (e) {
-    handleError(e, vm, info);
+    return  e + " (Promise/async)" 
   }
   return res
 }
