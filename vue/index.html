@@ -23,6 +23,7 @@
     <h2>
       {{obj.b}}
     </h2>
+    
   </div>
   <script type="module">
     import Vue from "./src/index.js"
@@ -46,6 +47,12 @@
       created() {
         //   console.log(1)
         //  return 1
+      },
+      computed: {
+        'aaa': function () {
+          console.log('aaa')
+          return 2
+        }
       },
       watch: {
         'obj1.a': {

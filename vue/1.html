@@ -13,6 +13,7 @@
     <h1>{{arr}}</h1>
     <h1>{{obj.a}}</h1>
     <h1>{{obj.b}}</h1>
+    <h1>{{aaa}}</h1>
   </div>
   <script src="./vue.js"></script>
   <script>
@@ -33,6 +34,12 @@
       created() {
         // console.log(1)
         //  return 1
+      },
+      computed: {
+        'aaa': function () {
+          console.log('aaa')
+          return 1
+        }
       },
       watch: {
         name: {

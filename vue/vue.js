@@ -1916,7 +1916,8 @@
     vm,
     info
   ) {
-    debugger
+  
+    
     var res;
     try {
       res = args ? handler.apply(context, args) : handler.call(context);
@@ -4678,7 +4679,7 @@
    * Remove self from all dependencies' subscriber list.
    */
   Watcher.prototype.teardown = function teardown() {
-    debugger
+
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
@@ -4871,7 +4872,9 @@
           computedWatcherOptions
         );
       }
-
+ 
+      console.log(     watchers)
+    
       // component-defined computed properties are already defined on the
       // component prototype. We only need to define computed properties defined
       // at instantiation here.
@@ -4895,6 +4898,7 @@
     userDef
   ) {
     var shouldCache = !isServerRendering();
+ 
     if (typeof userDef === 'function') {
       sharedPropertyDefinition.get = shouldCache
         ? createComputedGetter(key)
@@ -4909,6 +4913,7 @@
       sharedPropertyDefinition.set = userDef.set || noop;
     }
     if (sharedPropertyDefinition.set === noop) {
+      debugger
       sharedPropertyDefinition.set = function () {
         warn(
           ("Computed property \"" + key + "\" was assigned to but it has no setter."),
@@ -4916,6 +4921,7 @@
         );
       };
     }
+    debugger
     Object.defineProperty(target, key, sharedPropertyDefinition);
   }
 
