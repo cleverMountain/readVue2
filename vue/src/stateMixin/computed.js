@@ -1,5 +1,5 @@
 import Watcher from '../Observe/watcher.js'
-
+import { Dep } from "../Observe/dep.js"
 
 function noop(a, b, c) { }
 var sharedPropertyDefinition = {
@@ -9,21 +9,26 @@ var sharedPropertyDefinition = {
   set: noop
 };
 function createComputedGetter(key) {
+
   return function computedGetter() {
+    
     var watcher = this._computedWatchers && this._computedWatchers[key];
     if (watcher) {
       if (watcher.dirty) {
+        // 执行lazy watcher 得到value
         watcher.evaluate();
       }
       if (Dep.target) {
         watcher.depend();
       }
+      // getter的返回值
       return watcher.value
     }
   }
 }
 
 function createGetterInvoker(fn) {
+  
   return function computedGetter() {
     return fn.call(this, this)
   }
@@ -33,6 +38,7 @@ function initComputed(vm, computed) {
   for (var key in computed) {
     var userDef = computed[key];
     var getter = typeof userDef === 'function' ? userDef : userDef.get;
+    // getter即computed的回调函数
     watchers[key] = new Watcher(
       vm,
       getter || noop,
@@ -68,6 +74,7 @@ function defineComputed(
 ) {
   var shouldCache = true;
   if (typeof userDef === 'function') {
+    // get createComputedGetter(key)返回值
     sharedPropertyDefinition.get = shouldCache
       ? createComputedGetter(key)
       : createGetterInvoker(userDef);
@@ -96,8 +103,10 @@ function defineComputed(
       );
     };
   }
-  Object.defineProperty(target, key, sharedPropertyDefinition);
+  // 给computed属性代理到vm上，并添加description
   debugger
+  Object.defineProperty(target, key, sharedPropertyDefinition);
+  
 }
 
 

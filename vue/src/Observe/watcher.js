@@ -28,6 +28,7 @@ function Watcher(
   } else {
     this.deep = this.user = this.lazy = this.sync = false;
   }
+  this.dirty = this.lazy; // for lazy watchers
   this.expression = expOrFn.toString();
   this.active = true
   this.cb = cb;

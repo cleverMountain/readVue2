@@ -4926,7 +4926,9 @@
   }
 
   function createComputedGetter(key) {
+    debugger
     return function computedGetter() {
+      debugger
       var watcher = this._computedWatchers && this._computedWatchers[key];
       if (watcher) {
         if (watcher.dirty) {
