@@ -15,3 +15,4 @@ const vdom = createElement('ul', {
     ]),
     createElement('li', { class: 'item', 'data-index': 2 }, ['第三个列表'])
   ])
+  console.log(vdom)
