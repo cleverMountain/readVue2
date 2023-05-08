@@ -1071,7 +1071,7 @@
       enumerable: true,
       configurable: true,
       get: function reactiveGetter() {
-debugger
+
         var value = getter ? getter.call(obj) : val;
 
         if (Dep.target) {
@@ -1086,7 +1086,7 @@ debugger
         return value
       },
       set: function reactiveSetter(newVal) {
-        debugger
+  
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -3491,6 +3491,7 @@ debugger
         );
       } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
         // component
+        debugger
         vnode = createComponent(Ctor, data, context, children, tag);
       } else {
         // unknown or unlisted namespaced elements
@@ -4127,7 +4128,7 @@ debugger
       };
     } else {
       updateComponent = function () {
-       debugger
+  
         vm._update(vm._render(), hydrating);
        
       };
@@ -5060,6 +5061,7 @@ debugger
         initInternalComponent(vm, options);
 
       } else {
+        debugger
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
           options || {},
@@ -5073,12 +5075,6 @@ debugger
  
       // expose real self
       vm._self = vm;
-<<<<<<< HEAD
-      // 初始化生命周期
-   
-=======
-      // 初始化生命周
->>>>>>> c1fd035428c62cbcd7679e6e622188561ccd1e0d
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
@@ -6035,7 +6031,7 @@ debugger
       ownerArray,
       index
     ) {
-      debugger
+     
       if (isDef(vnode.elm) && isDef(ownerArray)) {
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
@@ -6634,7 +6630,7 @@ debugger
           // replacing existing element
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
-debugger
+
           // create new node
           createElm(
             vnode,
@@ -12084,7 +12080,7 @@ debugger
         if (config.performance && mark) {
           mark('compile');
         }
-debugger
+
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,

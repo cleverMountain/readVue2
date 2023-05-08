@@ -1,5 +1,6 @@
 import { createElement, render, renderDom } from "./js/virtualDom"
 import { domDiff } from "./js/domDifff"
+import doPatch from "./js/doPatch"
 
 // 虚拟dom
 const vdom = createElement('ul', {
@@ -17,7 +18,7 @@ const vdom = createElement('ul', {
     ]),
     createElement('li', { class: 'item', 'data-index': 2 }, ['第三个列表'])
   ])
-console.log(vdom)
+
 const vdom2 = createElement('ul', {
   class: 'list-wrap',
   style: "width: 300px; height: 300px; background-color: orange"
@@ -31,7 +32,7 @@ const vdom2 = createElement('ul', {
     ]),
     createElement('div', { class: 'item', 'data-index': 2 }, ['第三个列表'])
   ])
-console.log(vdom2)
+
 // 通过render转化成真实dom
 const rDom = render(vdom)
 
@@ -45,4 +46,3 @@ const patches = domDiff(vdom, vdom2)
 // 打补丁
 doPatch(rDom, patches)
 
-console.log(patches)
