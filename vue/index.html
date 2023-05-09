@@ -10,86 +10,86 @@
 
 <body>
   <div id="app">
-    <h1>
-      {{arr}}
-     
-    </h1>
-    <h1>
-      {{name}}
-    </h1>
-    <h2>
-      {{obj1.a}}
-    </h2>
-    <h2>
-      {{obj.b}}
-    </h2>
-    <h1>
-      {{aaa}}
-    </h1>
+    <my-component></my-component>
+
+
+
   </div>
   <script type="module">
     import Vue from "./src/index.js"
+    var Child = {
+      template: '<div>A custom component! {{child}}</div>',
+      data() {
+        return {
+          child: 1
+        }
+      },
+
+    }
     const vm = new Vue({
       el: '#app',
       data: {
         name: '我是若川',
-        obj: {
-          a: 1,
-          b: 2,
-        },
-        obj1: {
-          a: 1
-        },
-        arr: [1, 2, 3]
+        // obj: {
+        //   a: 1,
+        //   b: 2,
+        // },
+        // obj1: {
+        //   a: 1
+        // },
+        // arr: [1, 2, 3]
       },
+      components: {
+        // <my-component> 将只在父组件模板中可用
+        'my-component': Child
+      },
+      // inject: {
+      //   // a: 1
+      // },
+      // created() {
+      //   //   console.log(1)
+      //   //  return 1
+      // },
+      // computed: {
+      //   'aaa': function () {
+      //     console.log('aaa')
+      //     return 2
+      //   }
+      // },
+      // watch: {
+      //   'obj1.a': {
+      //     handler(val, oldVal) {
 
-      inject: {
-        // a: 1
-      },
-      created() {
-        //   console.log(1)
-        //  return 1
-      },
-      computed: {
-        'aaa': function () {
-          console.log('aaa')
-          return 2
-        }
-      },
-      watch: {
-        'obj1.a': {
-          handler(val, oldVal) {
+      //       console.log('new: %s, old: %s', val, oldVal)
+      //     },
+      //     // immediate: true,
+      //     deep: true
+      //   }
+      // },
+      // beforeMount() {
 
-            console.log('new: %s, old: %s', val, oldVal)
-          },
-          // immediate: true,
-          deep: true
-        }
-      },
-      beforeMount() {
+      //   console.log(1)
+      // },
+      // methods: {
+      //   sayName() {
+      //     console.log(this.name);
+      //     this.name = 1
 
-        console.log(1)
-      },
-      methods: {
-        sayName() {
-          console.log(this.name);
-          this.name = 1
-
-        }
-      },
+      //   }
+      // },
     })
 
 
-    setTimeout(() => {
-      // vm.$set(vm.obj, 'a', 2)
-      // // vm.$set(vm.arr, 2, 10)
-      // vm.$delete(vm.obj, 'b')
-      // vm.$delete(vm.arr, 2)
-      // // 调用该方法可实现视图更新
-      // vm._update(vm._render())
-      // vm.arr.push(4)
-      vm.obj1.a = 10
-    }, 3000)
+    // setTimeout(() => {
+    //   // vm.$set(vm.obj, 'a', 2)
+    //   // // vm.$set(vm.arr, 2, 10)
+    //   // vm.$delete(vm.obj, 'b')
+    //   // vm.$delete(vm.arr, 2)
+    //   // // 调用该方法可实现视图更新
+    //   // vm._update(vm._render())
+    //   // vm.arr.push(4)
+    //   vm.obj1.a = 10
+    // }, 3000)
     // console.log(2)
     // vm.$nextTick(() => {
     //   console.log('我是nextTick')

@@ -16,7 +16,13 @@
   <script src="./vue.js"></script>
   <script>
     var Child = {
-      template: '<div>A custom component!</div>'
+      template: '<div>A custom component! {{child}}</div>',
+      data () {
+        return {
+          child: 1
+        }
+      },
+
     }
     const vm = new Vue({
       el: '#app',

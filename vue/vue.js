@@ -1627,6 +1627,7 @@
     id,
     warnMissing
   ) {
+    
     /* istanbul ignore if */
     if (typeof id !== 'string') {
       return
@@ -3498,9 +3499,13 @@
           config.parsePlatformTagName(tag), data, children,
           undefined, undefined, context
         );
+      
       } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+        
         // component
+        debugger
         vnode = createComponent(Ctor, data, context, children, tag);
+       
       } else {
         // unknown or unlisted namespaced elements
         // check at runtime because it may get assigned a namespace when its
@@ -4913,7 +4918,7 @@
       sharedPropertyDefinition.set = userDef.set || noop;
     }
     if (sharedPropertyDefinition.set === noop) {
-      debugger
+
       sharedPropertyDefinition.set = function () {
         warn(
           ("Computed property \"" + key + "\" was assigned to but it has no setter."),
@@ -4921,14 +4926,14 @@
         );
       };
     }
-    debugger
+
     Object.defineProperty(target, key, sharedPropertyDefinition);
   }
 
   function createComputedGetter(key) {
-    debugger
+
     return function computedGetter() {
-      debugger
+ 
       var watcher = this._computedWatchers && this._computedWatchers[key];
       if (watcher) {
         if (watcher.dirty) {
@@ -5102,6 +5107,7 @@
           vm
         );
       }
+      console.log(vm)
       /* istanbul ignore else */
       {
         initProxy(vm);

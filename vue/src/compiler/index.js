@@ -8,13 +8,16 @@ import { parseHTML } from "./parse.js"
 import { generate } from "./generate.js"
 
 function compileToFunction(template) {
-  
+  console.log(template)
   // 创建ast语法树
   const ast = parseHTML(template)
+  console.log(ast)
   // 把语法树变成字符串
   const code = generate(ast)
+  console.log(code)
   // 将字符串变成render函数
   const render = new Function(`with(this){return ${code}}`)
+  console.log(render)
   return render
 }
 
