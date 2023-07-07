@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app" key="2" style="width: 600px; height: 400px;">432S
+    <h1 key="213" id="h1">{{name}} heel {{name}}</h1>
+    <span id="a">{{age}}</span>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: 'zf',
+          age: 20,
+          num: {
+            a: 1
+          },
+          hobby: ['吃', '喝', {a: 1}]
+        }
+      }
+    })
+    // console.dir(vm.name = 'e11qeqw')
+    // vm.hobby.push({b: 2})
+    // console.dir(vm)
+    setTimeout(() => {
+      vm.age = 40
+      vm.name = 'dasdsadas'
+     
+
+      // vm._update(vm._render())
+    }, 2000)
+    console.log(vm)
+  </script>
+</body>
+
+</html>

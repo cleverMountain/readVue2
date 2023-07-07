@@ -947,6 +947,7 @@
     // 给valeu添加__ob__
     def(value, '__ob__', this);
     if (Array.isArray(value)) {
+
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
@@ -1011,7 +1012,7 @@
    */
 
   function observe(value, asRootData) {
-    
+
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1049,7 +1050,6 @@
     customSetter,
     shallow
   ) {
-    
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1067,7 +1067,9 @@
     // 对对象递归
     var childOb = !shallow && observe(val);
 
+
     Object.defineProperty(obj, key, {
+
       enumerable: true,
       configurable: true,
       get: function reactiveGetter() {
@@ -1104,6 +1106,7 @@
           val = newVal;
         }
         childOb = !shallow && observe(newVal);
+
         dep.notify();
       }
     });
@@ -1126,9 +1129,11 @@
       return val
     }
     if (key in target && !(key in Object.prototype)) {
+   
       target[key] = val;
       return val
     }
+
     var ob = (target).__ob__;
     if (target._isVue || (ob && ob.vmCount)) {
       warn(
@@ -1320,7 +1325,9 @@
     parentVal,
     childVal
   ) {
-    // debugger
+
+
+
     var res = childVal
       ? parentVal
         ? parentVal.concat(childVal)
@@ -1620,6 +1627,7 @@
     id,
     warnMissing
   ) {
+    
     /* istanbul ignore if */
     if (typeof id !== 'string') {
       return
@@ -1909,12 +1917,14 @@
     vm,
     info
   ) {
+  
+    
     var res;
     try {
       res = args ? handler.apply(context, args) : handler.call(context);
-      console.log(res)
+ 
       let a = handler()
-      console.log(a)
+    
       if (res && !res._isVue && isPromise(res) && !res._handled) {
         res.catch(function (e) { return handleError(e, vm, info + " (Promise/async)"); });
         // issue #9511
@@ -3489,10 +3499,13 @@
           config.parsePlatformTagName(tag), data, children,
           undefined, undefined, context
         );
+      
       } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+        
         // component
         debugger
         vnode = createComponent(Ctor, data, context, children, tag);
+       
       } else {
         // unknown or unlisted namespaced elements
         // check at runtime because it may get assigned a namespace when its
@@ -4086,6 +4099,7 @@
     hydrating
   ) {
     vm.$el = el;
+
     if (!vm.$options.render) {
       vm.$options.render = createEmptyVNode;
       {
@@ -4128,9 +4142,9 @@
       };
     } else {
       updateComponent = function () {
-  
+
         vm._update(vm._render(), hydrating);
-       
+
       };
     }
 
@@ -4279,9 +4293,11 @@
   }
 
   function callHook(vm, hook) {
+
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
+
     var info = hook + " hook";
     if (handlers) {
       for (var i = 0, j = handlers.length; i < j; i++) {
@@ -4491,6 +4507,7 @@
     options,
     isRenderWatcher
   ) {
+
     this.vm = vm;
     if (isRenderWatcher) {
       vm._watcher = this;
@@ -4519,6 +4536,7 @@
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn;
     } else {
+
       this.getter = parsePath(expOrFn);
       if (!this.getter) {
         this.getter = noop;
@@ -4539,7 +4557,7 @@
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get() {
- 
+   
     pushTarget(this);
     var value;
     var vm = this.vm;
@@ -4603,12 +4621,14 @@
    * Will be called when a dependency changes.
    */
   Watcher.prototype.update = function update() {
+    
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true;
     } else if (this.sync) {
       this.run();
     } else {
+      
       queueWatcher(this);
     }
   };
@@ -4664,6 +4684,7 @@
    * Remove self from all dependencies' subscriber list.
    */
   Watcher.prototype.teardown = function teardown() {
+
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
@@ -4689,6 +4710,7 @@
   };
   // 代理
   function proxy(target, sourceKey, key) {
+
     // function proxyGetter 重写了noop
     sharedPropertyDefinition.get = function proxyGetter() {
       return this[sourceKey][key]
@@ -4714,6 +4736,7 @@
     }
     if (opts.computed) { initComputed(vm, opts.computed); }
     if (opts.watch && opts.watch !== nativeWatch) {
+      
       initWatch(vm, opts.watch);
     }
   }
@@ -4802,11 +4825,13 @@
           vm
         );
       } else if (!isReserved(key)) {
+
         // 对_data进行代理
         proxy(vm, "_data", key);
       }
     }
     // observe data
+
     observe(data, true /* asRootData */);
   }
 
@@ -4827,7 +4852,7 @@
   var computedWatcherOptions = { lazy: true };
 
   function initComputed(vm, computed) {
-  
+
     // $flow-disable-line
     var watchers = vm._computedWatchers = Object.create(null);
     // computed properties are just getters during SSR
@@ -4852,7 +4877,9 @@
           computedWatcherOptions
         );
       }
-
+ 
+      console.log(     watchers)
+    
       // component-defined computed properties are already defined on the
       // component prototype. We only need to define computed properties defined
       // at instantiation here.
@@ -4876,6 +4903,7 @@
     userDef
   ) {
     var shouldCache = !isServerRendering();
+ 
     if (typeof userDef === 'function') {
       sharedPropertyDefinition.get = shouldCache
         ? createComputedGetter(key)
@@ -4890,6 +4918,7 @@
       sharedPropertyDefinition.set = userDef.set || noop;
     }
     if (sharedPropertyDefinition.set === noop) {
+
       sharedPropertyDefinition.set = function () {
         warn(
           ("Computed property \"" + key + "\" was assigned to but it has no setter."),
@@ -4897,11 +4926,14 @@
         );
       };
     }
+
     Object.defineProperty(target, key, sharedPropertyDefinition);
   }
 
   function createComputedGetter(key) {
+
     return function computedGetter() {
+ 
       var watcher = this._computedWatchers && this._computedWatchers[key];
       if (watcher) {
         if (watcher.dirty) {
@@ -4957,6 +4989,7 @@
           createWatcher(vm, key, handler[i]);
         }
       } else {
+    
         createWatcher(vm, key, handler);
       }
     }
@@ -5000,7 +5033,6 @@
     }
     Object.defineProperty(Vue.prototype, '$data', dataDef);
     Object.defineProperty(Vue.prototype, '$props', propsDef);
-
     Vue.prototype.$set = set;
     Vue.prototype.$delete = del;
 
@@ -5015,14 +5047,19 @@
       }
       options = options || {};
       options.user = true;
+      debugger
       var watcher = new Watcher(vm, expOrFn, cb, options);
       if (options.immediate) {
         var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
         pushTarget();
+
+   
         invokeWithErrorHandling(cb, vm, [watcher.value], vm, info);
         popTarget();
       }
+    
       return function unwatchFn() {
+       debugger
         watcher.teardown();
       }
     };
@@ -5048,10 +5085,10 @@
 
       // a flag to avoid this being observed
       vm._isVue = true;
-    
+
       // merge options
       if (options && options._isComponent) {
-   
+
         // 优化      内部的    组件     实例  instance
         // optimize internal component instantiation
         // 因为    动态(充满活力)
@@ -5061,20 +5098,24 @@
         initInternalComponent(vm, options);
 
       } else {
-        debugger
+        let d = resolveConstructorOptions(vm.constructor)
+
+
         vm.$options = mergeOptions(
           resolveConstructorOptions(vm.constructor),
           options || {},
           vm
         );
       }
+      console.log(vm)
       /* istanbul ignore else */
       {
         initProxy(vm);
       }
- 
+
       // expose real self
       vm._self = vm;
+      // 初始化生命周
       initLifecycle(vm);
       // 初始化事件
       initEvents(vm);
@@ -5094,9 +5135,9 @@
       }
 
       if (vm.$options.el) {
-  
+
         let d = vm.$mount(vm.$options.el);
-        console.log(d)
+      
 
         return
       }
@@ -5202,6 +5243,7 @@
 
   function initMixin$1(Vue) {
     Vue.mixin = function (mixin) {
+
       this.options = mergeOptions(this.options, mixin);
       return this
     };
@@ -6031,7 +6073,7 @@
       ownerArray,
       index
     ) {
-     
+
       if (isDef(vnode.elm) && isDef(ownerArray)) {
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
@@ -6630,7 +6672,6 @@
           // replacing existing element
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
-
           // create new node
           createElm(
             vnode,
@@ -11829,14 +11870,14 @@
 
       // compile 首次进入complied函数
       var compiled = compile(template, options);
-       /**
-         *  return {
-         *    ast: ast,   ast语法树
-         *    render: code.render, render函数
-         *    staticRenderFns: code.staticRenderFns
-         *  }
-         */
-        console.log(compiled)
+      /**
+        *  return {
+        *    ast: ast,   ast语法树
+        *    render: code.render, render函数
+        *    staticRenderFns: code.staticRenderFns
+        *  }
+        */
+  
       // check compilation errors/tips
       {
         if (compiled.errors && compiled.errors.length) {
@@ -11962,7 +12003,7 @@
          *    staticRenderFns: code.staticRenderFns
          *  }
          */
-        console.log(compiled)
+      
 
         {
           detectErrors(compiled.ast, warn);
@@ -12034,7 +12075,7 @@
     hydrating
   ) {
     // 拿到dom节点
-   
+
     el = el && query(el);
 
     /* istanbul ignore if */
@@ -12080,7 +12121,6 @@
         if (config.performance && mark) {
           mark('compile');
         }
-
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -12096,7 +12136,7 @@
          * }
          */
 
-        console.log(ref)
+        
         // 得到render函数
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
@@ -12112,8 +12152,7 @@
       }
     }
     let d = mount.call(this, el, hydrating)
-    console.log(d)
-
+ 
     return mount.call(this, el, hydrating)
   };
 

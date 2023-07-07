@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function AAA () {
+      console.log(this)
+      console.log(this instanceof AAA)
+      // console.log(constructor)
+    }
+
+    class A {
+      constructor() {
+        console.log(this)
+        console.log(this instanceof A)
+      }
+    }
+    let a = new A()
+    console.log(a)
+    console.log(A)
+
+
+    let aaa = new AAA()
+  </script>
+</body>
+</html>

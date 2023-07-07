@@ -1,3 +1,5 @@
 .vscode
 vdom/node_modules
 node_modules
+rollup/node_modules
+rollup1/node_modules
