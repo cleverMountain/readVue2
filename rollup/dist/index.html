@@ -11,8 +11,8 @@
 <!-- {{user.a}} -->
 <body>
   <div id="app" key="2" style="width: 600px; height: 400px;">
+<h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1>
 
-    <span id="a"></span>
   </div>
   <script src="./vue.js"></script>
   <script>
@@ -20,30 +20,19 @@
       el: '#app',
       data() {
         return {
-          // name: 'zf',
-          // age: '20',
+          name: 'zf',
+          age: '20',
           user: {
             a: 1
           },
-          // num: {
-          //   a: 1
-          // },
-          // hobby: ['吃', '喝', { a: 1 }],
-          // arr: [1, 2, 3]
+          num: {
+            a: 1
+          },
+          hobby: ['吃', '喝', { a: 1 }],
+          arr: [1, 2, 3]
         }
       },
-      // computed: {
-      //   fullName: {
-      //     get() {
-      //       console.log('update')
-      //       console.log(this.name + this.age)
-      //       return this.name + this.age
-      //     },
-      //     set() {
 
-      //     }
-      //   }
-      // },
       watch: {
         user: {
           handler(newVal, oldVal) {
@@ -52,32 +41,11 @@
           deep: true,
           // immediate: true
         },
-        // 'user.name': {
-        //   handler(newVal, oldVal) {
-        //     console.log(newVal, oldVal);
-        //   },
-        //   deep: true,
-        //   immediate: true
-        // }
-
-
       }
     })
-    // console.dir(vm.name = 'e11qeqw')
-    // vm.hobby.push({b: 2})
-    // console.dir(vm)
-    // setTimeout(() => {
-    //   // vm.age = 40
-    //   // vm.name = 'dasdsadas'
-    //   // vm.hobby[2].a = '但是'
-    //   // vm.arr[1] = '个'
-    //   vm.arr.push(4)
-    //   // vm.$nextTick(() => {
-    //   //   console.log(app.innerHTML)
-    //   // })
-    // }, 2000)
+
     setTimeout(() => {
-      vm.user.a = '我来'
+      vm.name = '我来'
     }, 2000)
     console.log(vm)
   </script>

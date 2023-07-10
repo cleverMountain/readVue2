@@ -1,5 +1,5 @@
 import { createElementVNode, createTextVNode } from "./vnode/index"
-import { patch } from "./patch/index"
+import { patch } from "./vnode/patch"
 import Watcher from "./observe/watcher"
 
 

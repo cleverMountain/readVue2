@@ -39,7 +39,7 @@ class Watcher {
 
   }
   get() {
-debugger
+
     pushTarget(this)
     let value = this.getter.call(this.vm) // 调用getter将this指向绑定为vm，否则this指向watcher
     popTarget()
