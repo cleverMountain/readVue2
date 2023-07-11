@@ -5,13 +5,13 @@ import Watcher from "./observe/watcher"
 
 function initlifeCycle(Vue) {
   Vue.prototype._update = function (vnode) {
-   
+
     const vm = this
 
     const el = vm.$el
 
     vm.$el = patch(el, vnode)
-
+    callHook(vm, 'mounted')    
   },
     Vue.prototype._render = function () {
       const vm = this
@@ -33,7 +33,7 @@ function initlifeCycle(Vue) {
 }
 
 function mountComponent(vm, el) {
-
+  callHook(vm, 'beforeMount')
   vm.$el = el
   
   // vm._render()，将render函数变成虚拟dom
@@ -41,11 +41,20 @@ function mountComponent(vm, el) {
   const undateComponent = () => {
     vm._update(vm._render())
   }
-
+ 
   new Watcher(vm, () => {
     undateComponent()
   }, true)
 }
 
 
-export { mountComponent, initlifeCycle }
+
+function callHook (vm, hook) {
+  const handlers = vm.$options[hook]
+  if (handlers) {
+    handlers.forEach(handler => {
+      handler.call(vm)
+    })
+  }
+}
+export { mountComponent, initlifeCycle, callHook }

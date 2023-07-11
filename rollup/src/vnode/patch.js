@@ -2,22 +2,30 @@ function patch(oldNode, newNode) {
   // 首次加载root是真实dom存在nodeType
   const isRealElement = oldNode.nodeType
 
-  if (isRealElement) {
+  // if (isRealElement) {
 
-    let newEle = createEle(newNode)
-    // console.log(root.nextSibling.nextSibling, '1')
-    // console.log(root.previousSibling , '2')
-    // 该节点的下一个节点
-    document.body.insertBefore(newEle, oldNode.nextSibling)
-    document.body.removeChild(oldNode)
+  //   let newEle = createEle(newNode)
+  //   // console.log(root.nextSibling.nextSibling, '1')
+  //   // console.log(root.previousSibling , '2')
+  //   // 该节点的下一个节点
+  //   document.body.insertBefore(newEle, oldNode.nextSibling)
+  //   document.body.removeChild(oldNode)
 
 
-    return newNode
-  } else {
+  //   return newNode
+  // } else {
 
-    return patchVnode(oldNode, newNode)
-  }
+  //   return patchVnode(oldNode, newNode)
+  // }
+  let newEle = createEle(newNode)
+  // console.log(root.nextSibling.nextSibling, '1')
+  // console.log(root.previousSibling , '2')
+  // 该节点的下一个节点
+  oldNode.parentNode.insertBefore(newEle, oldNode.nextSibling)
+  oldNode.parentNode.removeChild(oldNode)
 
+
+  return newEle
 }
 
 function createEle(vonde) {
@@ -120,6 +128,6 @@ function patchVnode(oldNode, newNode) {
 
 function upDateChildren(el, oldChildren, newChildren) {
   console.log(el, oldChildren, newChildren)
-  debugger
+  // 采用双指针的方式
 }
 export { patch }

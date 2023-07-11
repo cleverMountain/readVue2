@@ -346,6 +346,83 @@
       return render;
     }
 
+    var starts = {};
+    var LIFECYCLE_HOOKS = ['beforeCreate', 'created', 'beforeMount', 'mounted', 'beforeUpdate', 'updated', 'beforeDestroy', 'destroyed'];
+    LIFECYCLE_HOOKS.forEach(function (hook) {
+      starts[hook] = function (p, c) {
+        if (c) {
+          if (p) {
+            // 儿子有父亲有
+            return p.concat(c);
+          } else {
+            // 儿子有父亲没有
+            return [c];
+          }
+        } else {
+          // 儿子没有，父亲有
+
+          return p;
+        }
+      };
+    });
+    function mergeOptions() {
+      var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var child = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var options = {};
+      function mergeField(key) {
+        if (starts[key]) {
+          // 策略模式中有
+          /**
+           * {
+           *  created: [], 进行再处理
+           *  a: 1 
+           * }
+           */
+          options[key] = starts[key](parent[key], child[key]);
+        } else {
+          // 没有直接赋值
+          options[key] = child[key] || parent[key];
+        }
+      }
+
+      // 先合并父亲再合并儿子
+      for (var key in parent) {
+        mergeField(key);
+      }
+      for (var _key in child) {
+        if (!parent.hasOwnProperty(_key)) {
+          mergeField(_key);
+        }
+      }
+      // console.log(options)
+      return options;
+    }
+
+    function initGlobalAPI(Vue) {
+      Vue.options = {};
+      Vue.mixin = function (mixin) {
+        this.options = mergeOptions(this.options, mixin);
+        return this.options;
+      };
+      Vue.extend = function (options) {
+        console.log(options);
+        function Sub() {
+          var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+          this._init(options);
+        }
+        Sub.options = options;
+        Sub.prototype = Vue.prototype;
+        Sub.prototype.constructor = Sub;
+        return Sub;
+      };
+      Vue.options.components = {};
+      Vue.component = function (idName, definetion) {
+        definetion = typeof definetion === 'function' ? definetion : Vue.extend(definetion);
+        Vue.options.components[idName] = definetion;
+        console.log(Vue.options.components);
+      };
+    }
+
     // 创建标签
     function createElementVNode(tag, props) {
       for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -369,18 +446,29 @@
 
     function patch(oldNode, newNode) {
       // 首次加载root是真实dom存在nodeType
-      var isRealElement = oldNode.nodeType;
-      if (isRealElement) {
-        var newEle = createEle(newNode);
-        // console.log(root.nextSibling.nextSibling, '1')
-        // console.log(root.previousSibling , '2')
-        // 该节点的下一个节点
-        document.body.insertBefore(newEle, oldNode.nextSibling);
-        document.body.removeChild(oldNode);
-        return newNode;
-      } else {
-        return patchVnode(oldNode, newNode);
-      }
+      oldNode.nodeType;
+
+      // if (isRealElement) {
+
+      //   let newEle = createEle(newNode)
+      //   // console.log(root.nextSibling.nextSibling, '1')
+      //   // console.log(root.previousSibling , '2')
+      //   // 该节点的下一个节点
+      //   document.body.insertBefore(newEle, oldNode.nextSibling)
+      //   document.body.removeChild(oldNode)
+
+      //   return newNode
+      // } else {
+
+      //   return patchVnode(oldNode, newNode)
+      // }
+      var newEle = createEle(newNode);
+      // console.log(root.nextSibling.nextSibling, '1')
+      // console.log(root.previousSibling , '2')
+      // 该节点的下一个节点
+      oldNode.parentNode.insertBefore(newEle, oldNode.nextSibling);
+      oldNode.parentNode.removeChild(oldNode);
+      return newEle;
     }
     function createEle(vonde) {
       var tag = vonde.tag;
@@ -432,49 +520,6 @@
           }
         }
       }
-    }
-    function isSameVnode(node1, node2) {
-      return node1.tag === node2.tag && node2.key === node2.key;
-    }
-    function patchVnode(oldNode, newNode) {
-      // patch算法,同级比对，广度优先
-      // 1.两个节点不是一个节点tag变化
-      // 2.两个节点是同一个节点（tag， key），复用老节点
-      // 3.节点比肩完毕，比较儿子
-      var isSameNode = isSameVnode(oldNode, newNode);
-      console.log(oldNode, newNode);
-      // 1.不同节点
-      if (!isSameNode) {
-        // 不同直接替换，老节点的父亲替换老节点
-        var _el = createEle(newNode);
-        oldNode.el.parentNoed.replaceChild(_el, oldNode.el);
-        return _el;
-      }
-      // 2.相同节点， 是文本，同级
-      var el = newNode.el = oldNode.el; // 互用老节点的元素
-      if (isSameNode && !oldNode.tag) {
-        // 不相同用新文本替换旧文本
-        if (oldNode.text !== newNode.text) {
-          el.textContent = vonde.text;
-          return el;
-        }
-      }
-      // 3.是标签，比对标签的属性,同级
-      patchProps(el, oldNode.props, newNode.props);
-
-      // 4.比较儿子，一边有儿子一边没有儿子 ， 两边都有儿子
-      var oldChildren = oldNode.children || [];
-      var newChildren = newNode.children || [];
-      if (oldChildren.length > 0 && newChildren.length > 0) {
-        // 都有
-        upDateChildren(el, oldChildren, newChildren);
-      } else if (oldChildren.length > 0) ; else if (newChildren.length > 0) ;
-      console.log(oldChildren, newChildren);
-      return el;
-    }
-    function upDateChildren(el, oldChildren, newChildren) {
-      console.log(el, oldChildren, newChildren);
-      debugger;
     }
 
     var queue = []; // watcher队列
@@ -683,6 +728,7 @@
         var vm = this;
         var el = vm.$el;
         vm.$el = patch(el, vnode);
+        callHook(vm, 'mounted');
       }, Vue.prototype._render = function () {
         var vm = this;
         var vnode = vm.$options.render.call(vm);
@@ -699,6 +745,7 @@
       };
     }
     function mountComponent(vm, el) {
+      callHook(vm, 'beforeMount');
       vm.$el = el;
 
       // vm._render()，将render函数变成虚拟dom
@@ -709,6 +756,14 @@
       new Watcher(vm, function () {
         undateComponent();
       }, true);
+    }
+    function callHook(vm, hook) {
+      var handlers = vm.$options[hook];
+      if (handlers) {
+        handlers.forEach(function (handler) {
+          handler.call(vm);
+        });
+      }
     }
 
     // 重写数组中的部分方法
@@ -936,8 +991,13 @@
     function initMixin(Vue) {
       Vue.prototype._init = function (options) {
         var vm = this;
-        vm.$options = options;
+        // 合并参数
+        vm.$options = mergeOptions(this.constructor.options, options);
+        // 状态初始化之前钩子
+        callHook(vm, 'beforeCreated');
         initState(vm);
+        // 已经初始化状态了
+        callHook(vm, 'created');
         if (options.el) {
           vm.$mount(options.el);
         }
@@ -976,6 +1036,7 @@
     initMixin(Vue);
     initlifeCycle(Vue);
     initUtils(Vue);
+    initGlobalAPI(Vue);
 
     return Vue;
 

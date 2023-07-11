@@ -9,13 +9,37 @@
 </head>
 <!-- <h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1> -->
 <!-- {{user.a}} -->
+
 <body>
   <div id="app" key="2" style="width: 600px; height: 400px;">
-<h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1>
-
+    <h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1>
+    <div id="mount-point"></div>
   </div>
   <script src="./vue.js"></script>
   <script>
+    // Vue.mixin({
+    //   created() {
+    //     // console.log(1)
+    //   },
+    //   a: 1
+    // })
+    // Vue.mixin({
+    //   created() {
+    //     console.log(2)
+    //   },
+    //   b: 2
+    // })
+    let Profile = Vue.extend({
+      template: '<p> aka{{name}} </p>',
+      data() {
+        return {
+          name: 'extend'
+        }
+      }
+    })
+    Vue.component('my-button', Profile)
+    // 创建 Profile 实例，并挂载到一个元素上。
+    // new Profile().$mount('#mount-point')
     const vm = new Vue({
       el: '#app',
       data() {
@@ -32,7 +56,9 @@
           arr: [1, 2, 3]
         }
       },
+      created() {
 
+      },
       watch: {
         user: {
           handler(newVal, oldVal) {
@@ -47,7 +73,10 @@
     setTimeout(() => {
       vm.name = '我来'
     }, 2000)
-    console.log(vm)
+    // console.log(vm)
+
+
+
   </script>
 </body>
 
