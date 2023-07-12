@@ -11,9 +11,14 @@
 <!-- {{user.a}} -->
 
 <body>
+      <!-- <h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1>
+    <div id="mount-point">
+      <my-button></my-button>
+    </div> -->
   <div id="app" key="2" style="width: 600px; height: 400px;">
-    <h1 key="213" id="h1">{{name}} heel {{hobby[2].a}}</h1>
-    <div id="mount-point"></div>
+    <div id="mount-point">
+      <my-button></my-button>
+    </div>
   </div>
   <script src="./vue.js"></script>
   <script>
@@ -29,15 +34,18 @@
     //   },
     //   b: 2
     // })
+    Vue.component('my-button', {
+      template: '<button>全局的</button>'
+    })
     let Profile = Vue.extend({
-      template: '<p> aka{{name}} </p>',
-      data() {
-        return {
-          name: 'extend'
+      template: '<div> 子组件 <my-button></my-button> </div>',
+      components: {
+        'my-button': {
+          template: `<button>我是自己的</button>`
         }
       }
     })
-    Vue.component('my-button', Profile)
+    
     // 创建 Profile 实例，并挂载到一个元素上。
     // new Profile().$mount('#mount-point')
     const vm = new Vue({
@@ -70,13 +78,30 @@
       }
     })
 
-    setTimeout(() => {
-      vm.name = '我来'
-    }, 2000)
+    // setTimeout(() => {
+    //   vm.name = '我来'
+    // }, 2000)
     // console.log(vm)
 
-
-
+    // function get(n) {
+    //   let cache = {}
+    //   if (n > 0) {
+    //     return res = n * get(n - 1)
+    //   } else {
+    //     return 1
+    //   }
+    // }
+    // function cache (n) {
+    //   let ca = {}
+    //   return function () {
+    //     if (ca[k]) {
+    //       return ca[k]
+    //     } else {
+          
+    //     }
+    //   }
+    // }
+    
   </script>
 </body>
 

@@ -1,4 +1,14 @@
+function createComponent (vnode) {
+  let i = vnode.props
+  if ((i = i.hook) && (i = i.init)) {
+    i(vnode)
+  }
+}
+
+
+
 function patch(oldNode, newNode) {
+  debugger
   // 首次加载root是真实dom存在nodeType
   const isRealElement = oldNode.nodeType
 
@@ -29,6 +39,11 @@ function patch(oldNode, newNode) {
 }
 
 function createEle(vonde) {
+  // 是否是组件还是元素
+  if (createComponent(vonde)) {
+    return 
+  }
+
   const { tag, el, props, children, text, key } = vonde
   if (tag) {
     vonde.el = document.createElement(tag) // 将真实dom挂到虚拟dom上

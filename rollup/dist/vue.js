@@ -133,7 +133,7 @@
           }
         }
       }
-      console.log(root);
+      // console.log(root)
       return root;
     }
 
@@ -365,6 +365,15 @@
         }
       };
     });
+    starts.components = function (parent, child) {
+      var res = Object.create(parent);
+      if (child) {
+        for (var key in child) {
+          res[key] = child[key];
+        }
+      }
+      return res;
+    };
     function mergeOptions() {
       var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var child = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -399,18 +408,22 @@
     }
 
     function initGlobalAPI(Vue) {
-      Vue.options = {};
+      Vue.options = {
+        _base: Vue
+      };
       Vue.mixin = function (mixin) {
         this.options = mergeOptions(this.options, mixin);
         return this.options;
       };
       Vue.extend = function (options) {
-        console.log(options);
+        // console.log(options)
         function Sub() {
           var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+          // console.log(Vue.options, Sub.options)
+          // debugger
           this._init(options);
         }
-        Sub.options = options;
+        Sub.options = mergeOptions(Vue.options, options);
         Sub.prototype = Vue.prototype;
         Sub.prototype.constructor = Sub;
         return Sub;
@@ -419,32 +432,68 @@
       Vue.component = function (idName, definetion) {
         definetion = typeof definetion === 'function' ? definetion : Vue.extend(definetion);
         Vue.options.components[idName] = definetion;
-        console.log(Vue.options.components);
+        // console.log(Vue.options.components)
       };
+    }
+
+    function isReservedTag(tag) {
+      return ['a', 'span', 'div', 'ul', 'li', 'p'].includes(tag);
     }
 
     // 创建标签
     function createElementVNode(tag, props) {
+      var vm = this;
       for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         children[_key - 2] = arguments[_key];
       }
-      return vnode(tag, props, props.key, children);
+      if (isReservedTag(tag)) {
+        return vnode(tag, props, props.key, children);
+      } else {
+        // 组件的构造函数
+        var Ctor = vm.$options.components[tag]; // 有可能是函数也有可能是对象
+        createComponentVnode(tag, props, props.key, children, Ctor, vm);
+      }
     }
     // 创建文本
     function createTextVNode(text) {
       return vnode(undefined, undefined, undefined, undefined, text);
     }
-    function vnode(tag, props, key, children, text) {
+    function vnode(tag, props, key, children, text, componentOptions) {
       return {
         tag: tag,
         props: props,
         key: key,
         children: children,
-        text: text
+        text: text,
+        componentOptions: componentOptions
       };
     }
+    function createComponentVnode(tag, props, key, children, Ctor, vm) {
+      // console.log(Ctor, vm)
+      // debugger
+      // 如果是对象则使用extend构造子类
+      if (_typeof(Ctor) === 'object') {
+        Ctor = vm.$options._base.extend(Ctor);
+      }
+      props.hook = {
+        init: function init(vnode) {
+          vnode.componentInstance = new vnode.componentOptions.Ctor();
+        }
+      };
+      console.log(Ctor);
+      return vnode(tag, props, key, children, null, {
+        Ctor: Ctor
+      });
+    }
 
+    function createComponent(vnode) {
+      var i = vnode.props;
+      if ((i = i.hook) && (i = i.init)) {
+        i(vnode);
+      }
+    }
     function patch(oldNode, newNode) {
+      debugger;
       // 首次加载root是真实dom存在nodeType
       oldNode.nodeType;
 
@@ -471,6 +520,10 @@
       return newEle;
     }
     function createEle(vonde) {
+      // 是否是组件还是元素
+      if (createComponent(vonde)) {
+        return;
+      }
       var tag = vonde.tag;
         vonde.el;
         var props = vonde.props,
@@ -735,13 +788,15 @@
         return vnode;
       }, Vue.prototype._c = function () {
         // 创建标签y
-        return createElementVNode.apply(void 0, arguments);
+        var vm = this;
+        return createElementVNode.call.apply(createElementVNode, [vm].concat(Array.prototype.slice.call(arguments)));
       };
       Vue.prototype._s = function (value) {
         return value;
       };
       Vue.prototype._v = function () {
-        return createTextVNode.apply(void 0, arguments);
+        var vm = this;
+        return createTextVNode.call.apply(createTextVNode, [vm].concat(Array.prototype.slice.call(arguments)));
       };
     }
     function mountComponent(vm, el) {

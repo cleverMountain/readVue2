@@ -21,14 +21,16 @@ function initlifeCycle(Vue) {
     },
     Vue.prototype._c = function () {
       // 创建标签y
-      return createElementVNode(...arguments)
+      const vm = this
+      return createElementVNode.call(vm, ...arguments)
 
     }
   Vue.prototype._s = function (value) {
     return value
   }
   Vue.prototype._v = function () {
-    return createTextVNode(...arguments)
+    const vm = this
+    return createTextVNode.call(vm, ...arguments)
   }
 }
 

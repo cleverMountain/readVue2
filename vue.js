@@ -1611,6 +1611,7 @@
     }
     function mergeField(key) {
       var strat = strats[key] || defaultStrat;
+      debugger
       options[key] = strat(parent[key], child[key], vm, key);
     }
     return options

@@ -28,7 +28,16 @@ LIFECYCLE_HOOKS.forEach(hook => {
     }
   }
 })
+starts.components = function (parent, child) {
 
+  const res = Object.create(parent)
+  if (child) {
+    for(let key in child) {
+      res[key] = child[key]
+    }
+  }
+  return res
+}
 export default function mergeOptions(parent = {}, child = {}) {
   const options = {}
   function mergeField(key) {
