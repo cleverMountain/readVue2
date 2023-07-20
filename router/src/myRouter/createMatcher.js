@@ -4,27 +4,29 @@ function createRouteMap(routes, routeMap) {
   routes.forEach(route => {
     createRouteRecord(route, routeMap)
   })
-  console.log(routeMap)
+  console.log(routeMap, 'routeMap')
   return { routeMap }
 }
-function createRouteRecord(route, routeMap, parentPath) {
+function createRouteRecord(route, routeMap, parentPath, parent) {
+ 
   const { path, children, props, meta, component } = route
   if (!routeMap[path]) {
     if (!parentPath) {
       routeMap[path] = {
-        path, props, meta, component
+        path, props, meta, component,
       }
     } else {
       routeMap[parentPath + path] = {
         path: parentPath + path
-        , props, meta, component
+        , props, meta, component,
+        parent
       }
     }
 
   }
   if (children) {
     // 拼接父子path
-    children.forEach(child => { createRouteRecord(child, routeMap, path) })
+    children.forEach(child => { createRouteRecord(child, routeMap, path, route) })
   }
 }
 export default function createMatcher(routes) {

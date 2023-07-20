@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: HomeView
   },
@@ -19,11 +19,26 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   }
 ]
-debugger
+
 const router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
 
+router.beforeEach((to, form, next) => {
+  setTimeout(() => {
+    console.log(1)
+    next()
+  })
+})
+router.afterEach((to, form) => {
+  console.log(to, 'to')
+  console.log(form, 'form')
+
+})
+router.beforeResolve((to, from, next) => {
+  console.log(to, 'resolve')
+  next()
+})
 export default router

@@ -28,8 +28,8 @@ export default class HashHistory extends History {
   }
   setupListeners() {
     // hashchange
-    window.addEventListener('hashchange', function () {
-      getHash()
+    window.addEventListener('hashchange', () => {
+      this.transitionTo(getHash())
     })
   }
   // 获取当前路径
