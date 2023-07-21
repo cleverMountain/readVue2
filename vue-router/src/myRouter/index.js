@@ -164,26 +164,23 @@ const router = new Router({
 
 router.beforeEach((to, form, next) => {
   setTimeout(() => {
-    console.log(to)
-    console.log(1)
+
     next()
   })
 })
 router.beforeEach((to, form, next) => {
   setTimeout(() => {
-    console.log(2)
+ 
     next()
   })
 })
 router.afterEach((to, form) => {
-  console.log(to, 'to')
-  console.log(form, 'form')
-  console.log(3)
+
 
 })
 router.afterEach((to, form) => {
-  console.log(4)
+  
 
 })
-console.log(router)
+// console.log(router)
 export default router

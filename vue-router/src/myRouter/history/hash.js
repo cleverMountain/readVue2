@@ -2,7 +2,7 @@ import History from "./base";
 
 
 function ensureURL() {
-  console.log(window.location)
+  // console.log(window.location)
   if (window.location.hash) {
     return
   }
@@ -23,7 +23,7 @@ function getHash() {
 export default class HashHistory extends History {
   constructor(router) {
     super(router)
-    console.log(router)
+    // console.log(router)
     ensureURL()
   }
   setupListeners() {

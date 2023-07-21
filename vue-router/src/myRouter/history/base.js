@@ -53,7 +53,7 @@ export default class History {
     }
 
 
-    console.log(route, 'route')
+    // console.log(route, 'route')
     // queue to from cb
     runQueue(queue, this.current, route, () => {
       let que = [].concat(this.router.afterHooks)

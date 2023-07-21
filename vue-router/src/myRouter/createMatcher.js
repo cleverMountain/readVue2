@@ -4,7 +4,7 @@ function createRouteMap(routes, routeMap) {
   routes.forEach(route => {
     createRouteRecord(route, routeMap)
   })
-  console.log(routeMap, 'routeMap')
+  // console.log(routeMap, 'routeMap')
   return { routeMap }
 }
 function createRouteRecord(route, routeMap, parentPath, parent) {

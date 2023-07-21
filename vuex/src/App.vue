@@ -6,6 +6,9 @@
       <router-link to="/about">About</router-link>
     </nav>
     <router-view/>
+    <button @click="$store.commit('add', 1)">commit</button>
+    <button @click="$store.dispatch('add', 1)">dispatch</button>
+    <div>{{$store.getters.age}}</div>
   </div>
 </template>
 
@@ -13,7 +16,8 @@
 export default {
   created() {
 
-    console.log(this.$route)
+    // console.log(this.$route)
+    console.log(this.$store)
   }
 }
 
