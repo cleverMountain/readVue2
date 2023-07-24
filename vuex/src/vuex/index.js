@@ -8,6 +8,7 @@ class Store {
     this.getters = {}
     this.mutations = mutations
     this.actions = actions
+    this.modules = modules
     // let stateKeys = Object.keys(state)
     // stateKeys.forEach(key => {
     //   Object.defineProperty(this.state, key, {
@@ -36,6 +37,7 @@ class Store {
         }
       })
     })
+    this.handleModules(this)
   }
   get state() {
     return this._vm._data.$$state
@@ -46,9 +48,26 @@ class Store {
   dispatch(method, payload) {
     this.actions[method]({commit: this.commit.bind(this)}, payload)
   }
+  handleModules(self) {
+    if (!this.modules) return
+    // console.log(this.modules)
+    Object.keys(this.modules).forEach(module => {
+      const son = new Store(this.modules[module])
+      // console.log(son)
+      // console.log(this.modules[module])
+      console.log(self.state)
+      self.state[module]= son
+      if (son.modules) {
+        this.handleModules(self)
+      }
+    })
+  
+  }
 }
-const install = _vue => {
 
+
+
+const install = _vue => {
   Vue = _vue
   Vue.mixin({
     beforeCreate() {
