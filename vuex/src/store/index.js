@@ -1,6 +1,6 @@
 import Vue from "vue"
-// import Vuex from "../vuex/index"
-import Vuex from "vuex"
+import Vuex from "../vuex/index"
+// import Vuex from "vuex"
 
 // Vuex是一个对象，当调用use方法时会调用该方法上的install方法
 Vue.use(Vuex)
@@ -32,7 +32,7 @@ export default new Vuex.Store({
     a: {
       namespaced: true,
       state: {
-        age: 10
+        age: 11
       },
       getters: {
         age(state) {
@@ -54,10 +54,10 @@ export default new Vuex.Store({
         }
       },
       modules: {
-        a: {
+        b: {
           namespaced: true,
           state: {
-            age: 10
+            age: 12
           },
           getters: {
             age(state) {
@@ -67,7 +67,7 @@ export default new Vuex.Store({
           // 唯一修改状态的地方
           mutations: {
             add(state, payload) {
-    
+
               state.age += payload
             }
           },
@@ -77,8 +77,7 @@ export default new Vuex.Store({
                 commit('add', payload)
               }, 1000)
             }
-          },
-    
+          }
         }
       }
     }
