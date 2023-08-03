@@ -1,5 +1,5 @@
-import {install, Vue} from "./install"
-
+import { install, Vue } from "./install"
+import ModuleCollection from "./module/index"
 // export let Vue
 
 // class Store {
@@ -62,7 +62,7 @@ import {install, Vue} from "./install"
 //   //       this.handleModules(self)
 //   //     }
 //   //   })
-  
+
 //   // }
 // }
 
@@ -77,49 +77,58 @@ import {install, Vue} from "./install"
  *  }
  * }
  */
-class ModuleCollection {
-  constructor (options) {
-    this.root = null
-    this.register([], options)
+function installModule(store, rootState, path, rootModule) {
+
+  if (path.length === 0) {
+    // 根模块
+    store.state = rootState
   }
-  register(path, rootModule) {
-    let newModule = {
-      _raw: rootModule,
-      _children: {},
-      state: rootModule.state
+  let  k = path.join('/')
+  rootModule.forEachMutations((key, value) => {
+
+    store._mutations[k + '/' +  key] = store._mutations[k + '/' + key] || []
+    store._mutations[k + '/' + key].push((payload) => {
+      value(rootModule.state, payload)
+    })
+  })
+  rootModule.forEachActions((key, value) => {
+    store._actions[k + '/' + key] = store._actions[k + '/' + key] || []
+    store._actions[k + '/' + key].push((payload) => {
+      value(store, payload)
+    })
+  })
+  rootModule.forEachWrappedGetters((key, value) => {
+    store._wrappedGetters[k + '/' + key] = () => {
+      return value(rootModule.state)
     }
-    if (!this.root) {
-      this.root = newModule
-    
-    } else {
-      // 找parent
-      // [a]
-      // [a, b]
-      let parent = path.slice(0, -1).reduce((start, current) => {
-   
-        let b = start._children[current]
-    //  debugger
-        return b
-      }, this.root)
-      // path = [a] 时  parent  = root
-      // path = [a, b] 时 parent = this.root._children['a']
-      let key = path[path.length - 1]
-      console.log(parent, key)
-      // debugger
-      parent._children[key] = newModule
-    }
-    if (rootModule.modules) {
-      Object.keys(rootModule.modules).forEach(key => {
-        this.register(path.concat(key), rootModule.modules[key])
-      })
-    }
-  }
+  })
+  
+  // if (rootModule._raw.modules) {
+  //   Object.keys(rootModule._raw.modules).forEach((key) => {
+  //     const curModule = rootModule._raw.modules[key]
+  //     debugger
+  //     // let path1 = path.concat[key]
+  //     // debugger
+  //     installModule(store, rootState, path.concat(key), curModule)
+  //   })
+  // }
+  rootModule.forEachModuls((key,value) => {
+    installModule(store, rootState, path.concat(key), value)
+  })
+  console.log(store)
+
 }
 
 class Store {
-  constructor (options) {
+  constructor(options) {
+    // 格式化
     this._modules = new ModuleCollection(options)
     console.log(this._modules)
+    this._mutations = Object.create(null)
+    this._actions = Object.create(null)
+    this._wrappedGetters = Object.create(null)
+    const state = this._modules.root.state
+    installModule(this, state, [], this._modules.root)
   }
 
 }
