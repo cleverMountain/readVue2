@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <!-- <nav>
+    <nav>
       <router-link to="/home">Home</router-link> |
       <router-link to="/about">About</router-link>
     </nav>
     <router-view />
     <button @click="$store.commit('add', 1)">commit</button>
     <button @click="$store.dispatch('add', 1)">dispatch</button>
-    <div>{{ $store.getters.age }}</div>
-      <button @click="$store.commit('a/add', 1)">a/commit</button>
+    <!-- <div>{{ $store.getters.age }}</div>
+      <button @click="$store.commit('a/add', 1)">a/commit</button> -->
     <div>{{ $store.state.a.age }}</div>
-    <div>{{ $store.state.age }}</div> -->
+    <div>{{ $store.state.age }}</div>
   </div>
 </template>
 
